@@ -1,0 +1,43 @@
+.background-img {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-image: url('../../../public/images/login-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    background-color: #441C1C;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+input {
+    margin: 5px 0;
+}
+
+.cadastro {
+    font-size: 1.8rem;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 0 #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000;
+    margin: 5px 0;
+}
+
+.cadastro-usuario {
+    font-size: 30px;
+    color: brown;
+}

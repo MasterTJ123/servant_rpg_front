@@ -1,0 +1,60 @@
+/* Estilo para a página principal */
+.pagina-deletar-conta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #441C1C;
+    margin: 0;
+}
+
+/* Estilo do formulário */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espaçamento entre os inputs */
+    background-color: #441C1C;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Largura fixa */
+    text-align: center;
+}
+
+/* Estilo para o título */
+.formulario h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+/* Estilo dos inputs */
+.formulario input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.formulario input:focus {
+    border-color: #007BFF; /* Cor de borda ao focar */
+}
+
+/* Estilo do botão de deletar */
+.botao-deletar {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 1rem;
+    color: white;
+    background-color: #d9534f; /* Vermelho para representar a ação */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.botao-deletar:hover {
+    background-color: #c9302c; /* Tom mais escuro ao passar o mouse */
+}
