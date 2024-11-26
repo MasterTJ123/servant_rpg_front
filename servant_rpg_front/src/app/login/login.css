@@ -38,9 +38,23 @@ form {
     -1px -1px 0 #000000,
     1px -1px 0 #000000,
     -1px 1px 0 #000000;
-    margin: 5px 0;
+    margin: 0;
 }
 
 input {
-    margin: 5px 0;
+    margin: 10px 0;
+}
+
+.login-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.erro {
+    color: #FF0000FF;
+    font-size: 20px;
+    text-shadow: 0 0 1px #FFFFFF;
 }
