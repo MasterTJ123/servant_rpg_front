@@ -1,36 +1,22 @@
-.pagina-mostrar-personagem {
-  display: flex;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
-}
-
-.sidebar {
+.pagina-editar-personagem {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  width: 200px;
-  background-color: #000000;
-  color: white;
+  font-family: Arial, sans-serif;
+  background-color: #441c1c;
+  height: 100vh;
 }
 
-.seletor-personagem {
-  width: 100%;
-  margin-bottom: 20px;
-  padding: 8px;
-  border: none;
-  border-radius: 4px;
-}
-
-.botao-criar,
 .botao-voltar {
+  position: absolute;
+  left: 2%;
   width: 100%;
   margin-bottom: 10px;
   padding: 10px;
   border: none;
   border-radius: 4px;
-  background-color: #441c1c;
+  background-color: #180a0a;
   color: white;
   cursor: pointer;
   font-size: 16px;
@@ -46,60 +32,51 @@
   align-items: center; /* Centraliza o texto verticalmente */
 }
 
-.botao-criar:hover,
 .botao-voltar:hover {
-  background-color: #6e2d2d;
+  background-color: #643030;
 }
 
-.conteudo-ficha {
-  flex: 1;
+.formulario {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 600px;
+  width: 100%;
+  background-color: white;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  background-color: #441c1c;
-  overflow-y: auto;
-}
-
-.linha-campos {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.linha-campo-unico {
-  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .campo {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  margin-right: 10px;
-}
-
-.campo:last-child {
-  margin-right: 0;
 }
 
 label {
-  font-weight: bold;
   margin-bottom: 5px;
   font-size: 14px;
   color: #495057;
 }
 
-p {
-  font-size: 16px;
-  padding: 8px;
-  background-color: #e9ecef;
+.input-campo {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
   border-radius: 4px;
+  font-size: 16px;
 }
 
-.footer-ficha {
+.textarea-campo {
+  height: 100px;
+  resize: none;
+}
+
+.footer-formulario {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto;
+  grid-column: span 2;
 }
 
 .checkbox-jogador {
@@ -109,9 +86,9 @@ p {
   gap: 8px;
 }
 
-.botao-deletar {
+.botao-salvar {
   padding: 10px 20px;
-  background-color: #dc3545;
+  background-color: #5cb85c;
   color: white;
   border: none;
   border-radius: 4px;
@@ -119,6 +96,6 @@ p {
   cursor: pointer;
 }
 
-.botao-deletar:hover {
-  background-color: #bd2130;
+.botao-salvar:hover {
+  background-color: #4cae4c;
 }
