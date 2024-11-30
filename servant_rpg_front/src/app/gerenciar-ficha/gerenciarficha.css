@@ -1,0 +1,124 @@
+.pagina-mostrar-personagem {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 200px;
+  background-color: #000000;
+  color: white;
+}
+
+.seletor-personagem {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+}
+
+.botao-criar,
+.botao-voltar {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #441c1c;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none; /* Remove sublinhado */
+  font-size: 1.2rem; /* Tamanho da fonte */
+  cursor: pointer; /* Muda o cursor ao passar o mouse */
+  width: fit-content; /* O botão se ajusta ao conteúdo */
+  min-width: 100px; /* Define uma largura mínima para o botão */
+  display: flex; /* Torna o botão flexível */
+  justify-content: center; /* Centraliza o texto horizontalmente */
+  align-items: center; /* Centraliza o texto verticalmente */
+}
+
+.botao-criar:hover,
+.botao-voltar:hover {
+  background-color: #6e2d2d;
+}
+
+.conteudo-ficha {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: #441c1c;
+  overflow-y: auto;
+}
+
+.linha-campos {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.linha-campo-unico {
+  margin-bottom: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.campo:last-child {
+  margin-right: 0;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #495057;
+}
+
+p {
+  font-size: 16px;
+  padding: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+}
+
+.footer-ficha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.checkbox-jogador {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  gap: 8px;
+}
+
+.botao-deletar {
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.botao-deletar:hover {
+  background-color: #bd2130;
+}
