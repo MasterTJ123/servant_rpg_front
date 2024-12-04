@@ -1,74 +1,72 @@
+html {
+  background-color: #441c1c;
+}
+
 .menu-principal {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #441c1c;
-  margin: 0;
   flex-direction: column; /* Faz com que a tela seja organizada de cima para baixo */
 }
 
 /* Faixa preta no topo */
 .faixa-preta {
   width: 100%;
-  height: 50px; /* Altura da faixa preta */
+  height: 3.125rem; /* Altura da faixa preta */
   background-color: black;
   position: relative;
-  top: -140px; /* Move a faixa para cima em 10px */
+  top: -8.75rem; /* Move a faixa para cima em 10px */
 }
 
 ul {
   list-style-type: none;
 }
+
 .container {
   display: flex;
   justify-content: center; /* Centraliza os itens dentro do container */
   align-items: center;
   width: 80%;
-  height: 400px;
-  gap: 20px; /* Espaçamento entre as colunas e a imagem */
-  position: relative;
+  height: 25%;
 }
 
 .container li {
-  display: flex;
-  align-items: center;
   position: absolute;
   justify-content: center;
-  list-style: none;
-  transform-origin: 370px;
-  transform: rotate(calc(360deg / 8 * var(--i))) translateX(50px);
-  left: 366px;
-  top: 140px;
+  transform-origin: 23.125rem;
+  transform: rotate(calc(360deg / 8 * var(--i)));
+  left: 30%;
 }
 
 .container li a {
   transform: rotate(calc(360deg / -8 * var(--i)));
 }
 
-.container li.um {
-  top: 180px;
+/* .container li.um {
+  top: 11.25rem;
 }
 
 .container li.tres {
-  top: 180px;
-  left: 386px;
+  top: 11.25rem;
+  left: 24.125rem;
 }
 
 .container li.quatro {
-  top: 142px;
+  top: 8.875rem;
 
-  left: 346px;
+  left: 21.625rem;
 }
 
 .container li.cinco {
-  top: 129px;
-  left: 356px;
+  top: 8.0625rem;
+  left: 22.25rem;
 }
 
 .container li.sete {
-  left: 336px;
-}
+  left: 21rem;
+} */
+
 .imagem-container {
   display: flex;
   align-items: center;
@@ -78,7 +76,7 @@ ul {
 
 .imagem {
   align-items: center;
-  max-width: 300px; /* Ajusta o tamanho máximo da imagem */
+  max-width: 18.75rem; /* Ajusta o tamanho máximo da imagem */
   height: auto;
 
   z-index: 1000;
