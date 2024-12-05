@@ -1,16 +1,17 @@
 .botaoRedondoSubmit {
-    display: flex; /* Torna o botão flexível */
-    justify-content: center; /* Centraliza o texto horizontalmente */
-    align-items: center; /* Centraliza o texto verticalmente */
-    padding: 15px; /* Espaçamento interno */
-    background-color: #170A0A; /* Cor do fundo */
-    border-radius: 45%; /* Arredonda as bordas */
-    color: #FFFFFF; /* Cor do texto */
-    text-decoration: none; /* Remove sublinhado */
-    font-size: 1.2rem; /* Tamanho da fonte */
-    cursor: pointer; /* Muda o cursor ao passar o mouse */
-    width: fit-content; /* O botão se ajusta ao conteúdo */
-    min-width: 100px; /* Define uma largura mínima para o botão */
-    border: none;
-    outline: none;
+  display: flex; /* Torna o botão flexível */
+  justify-content: center; /* Centraliza o texto horizontalmente */
+  align-items: center; /* Centraliza o texto verticalmente */
+  padding: 15px; /* Espaçamento interno */
+  background-color: #170a0a; /* Cor do fundo */
+  border-radius: 45%; /* Arredonda as bordas */
+  color: #ffffff; /* Cor do texto */
+  text-decoration: none; /* Remove sublinhado */
+  font-size: 1.2rem; /* Tamanho da fonte */
+  cursor: pointer; /* Muda o cursor ao passar o mouse */
+  width: fit-content; /* O botão se ajusta ao conteúdo */
+  min-width: 100px; /* Define uma largura mínima para o botão */
+  border: none;
+  outline: none;
+  font-family: inherit;
 }
