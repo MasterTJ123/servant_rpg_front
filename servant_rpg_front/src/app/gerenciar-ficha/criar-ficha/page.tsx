@@ -10,7 +10,9 @@ export default function PaginaEditarPersonagem(): JSX.Element {
     const formData = new FormData(event.currentTarget);
     const formValues = Object.fromEntries(formData.entries());
 
-    console.log("Form values:", formValues);
+    const datainjson = JSON.stringify(formData);
+
+    console.log("Form values:", datainjson);
     //Está pegando os valores do campo sem nenhum filtro, em um objeto
     //da pra só converter em JSON e mandar pro banco
   };

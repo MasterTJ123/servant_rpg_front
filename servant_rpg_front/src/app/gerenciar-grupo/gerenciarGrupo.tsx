@@ -20,9 +20,12 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
     campanha: "",
     fichasAtuais: [],
   });
+  const [erro, setErro] = useState<string>();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
+    setErro("");
+
     if (selectedValue === "Novo grupo") {
       setSelectedGrupo(null);
       setIsEditing(true);
@@ -45,14 +48,41 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
     }
   };
 
-  const saveGrupo = () => {
+  const saveGrupo = async (e) => {
+    e.preventDefault();
+
     if (selectedGrupo) {
       // TODO Adicionar aqui a função para editar o grupo no banco
       console.log("Updated group:", selectedGrupo);
     } else {
-      // TODO Adicionar aqui a função para salvar o novo grupo no banco
       // ele vai atualizar de cara, ou precisa dar um refresh na página? Pq está vindo da pagina anterior
-      console.log("Created new group:", newGrupo);
+      try {
+        const response = await fetch("http://localhost:8000/en/api/grupo/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nome: newGrupo.nome,
+            campanha: newGrupo.campanha,
+            fichasAtuais: newGrupo.fichasAtuais,
+          }),
+          credentials: "include",
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          const firstKey = Object.keys(errorData)[0];
+          const errorMessage = errorData[firstKey]?.[0];
+          setErro(errorMessage);
+          return;
+        }
+
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+        setErro("Erro inesperado! Tente novamente mais tarde!");
+      }
     }
     setIsEditing(false);
   };
