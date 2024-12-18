@@ -1,0 +1,17 @@
+[
+  {
+    "nome": "Floresta Maldita",
+    "campanha": "A Jornada do Herói",
+    "inimigosAtuais": ["Trenant", "Goblin", "Chupa Cabra"]
+  },
+  {
+    "nome": "Caverna Oculta",
+    "campanha": "O Reino Perdido",
+    "inimigosAtuais": ["Shade", "Bruxa", "Calango"]
+  },
+  {
+    "nome": "Vila Fantasma",
+    "campanha": "A Última Fortaleza",
+    "inimigosAtuais": ["Zumbi", "Lich", "Cachorro Louco"]
+  }
+]

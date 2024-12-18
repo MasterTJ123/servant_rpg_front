@@ -1,0 +1,17 @@
+[
+  {
+    "nome": "Grupo Aventureiros da Luz",
+    "campanha": "A Jornada do Herói",
+    "fichasAtuais": ["Arthas", "Lina", "Gorak"]
+  },
+  {
+    "nome": "Exploradores das Sombras",
+    "campanha": "O Reino Perdido",
+    "fichasAtuais": ["Shade", "Morgana", "Voltar"]
+  },
+  {
+    "nome": "Guerreiros do Amanhã",
+    "campanha": "A Última Fortaleza",
+    "fichasAtuais": ["Elyra", "Drakos", "Sylvan"]
+  }
+]

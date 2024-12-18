@@ -1,35 +1,38 @@
 "use client";
-import { useState } from "react";
-import "./gerenciarGrupo.css";
 
-interface Grupo {
+import { useState } from "react";
+import "./gerenciarCenario.css";
+
+interface Cenario {
   nome: string;
   campanha: string;
-  fichasAtuais: string[]; // Array with character names
+  inimigosAtuais: string[]; // Array with character names
 }
 
-interface GruposProps {
-  grupos: Grupo[];
+interface CenariosProps {
+  cenarios: Cenario[];
 }
 
-export default function GerenciarGrupo({ grupos }: GruposProps) {
-  const [selectedGrupo, setSelectedGrupo] = useState<Grupo | null>(null);
+export default function GerenciarCenario({ cenarios }: CenariosProps) {
+  const [selectedCenario, setSelectedCenario] = useState<Cenario | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [newGrupo, setNewGrupo] = useState<Grupo>({
+  const [newCenario, setNewCenario] = useState<Cenario>({
     nome: "",
     campanha: "",
-    fichasAtuais: [],
+    inimigosAtuais: [],
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
-    if (selectedValue === "Novo grupo") {
-      setSelectedGrupo(null);
+    if (selectedValue === "Novo cenário") {
+      setSelectedCenario(null);
       setIsEditing(true);
-      setNewGrupo({ nome: "", campanha: "", fichasAtuais: [] });
+      setNewCenario({ nome: "", campanha: "", inimigosAtuais: [] });
     } else {
-      const grupo = grupos.find((grupo) => grupo.nome === selectedValue);
-      setSelectedGrupo(grupo || null);
+      const cenario = cenarios.find(
+        (cenario) => cenario.nome === selectedValue
+      );
+      setSelectedCenario(cenario || null);
       setIsEditing(false);
     }
   };
@@ -38,21 +41,20 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
-    if (selectedGrupo) {
-      setSelectedGrupo({ ...selectedGrupo, [name]: value });
+    if (selectedCenario) {
+      setSelectedCenario({ ...selectedCenario, [name]: value });
     } else {
-      setNewGrupo({ ...newGrupo, [name]: value });
+      setNewCenario({ ...newCenario, [name]: value });
     }
   };
 
-  const saveGrupo = () => {
-    if (selectedGrupo) {
-      // TODO Adicionar aqui a função para editar o grupo no banco
-      console.log("Updated group:", selectedGrupo);
+  const saveCenario = () => {
+    if (selectedCenario) {
+      // Logic to update the existing scenario
+      console.log("Updated scenario:", selectedCenario);
     } else {
-      // TODO Adicionar aqui a função para salvar o novo grupo no banco
-      // ele vai atualizar de cara, ou precisa dar um refresh na página? Pq está vindo da pagina anterior
-      console.log("Created new group:", newGrupo);
+      // Logic to create a new scenario
+      console.log("Created new scenario:", newCenario);
     }
     setIsEditing(false);
   };
@@ -67,12 +69,12 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
         </a>
       </div>
       <div className="mainScreen">
-        <select className="seletor-grupo" onChange={handleChange}>
-          <option value="">Selecione um grupo</option>
-          <option value="Novo grupo">Novo grupo</option>
-          {grupos.map((grupo) => (
-            <option key={grupo.nome} value={grupo.nome}>
-              {grupo.nome}
+        <select className="seletor-cenario" onChange={handleChange}>
+          <option value="">Selecione um cenário</option>
+          <option value="Novo cenário">Novo cenário</option>
+          {cenarios.map((cenario) => (
+            <option key={cenario.nome} value={cenario.nome}>
+              {cenario.nome}
             </option>
           ))}
         </select>
@@ -84,7 +86,7 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
               <label>Nome</label>
               <input
                 name="nome"
-                value={selectedGrupo?.nome || newGrupo.nome}
+                value={selectedCenario?.nome || newCenario.nome}
                 onChange={handleInputChange}
               />
             </div>
@@ -92,28 +94,28 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
               <label>Campanha</label>
               <input
                 name="campanha"
-                value={selectedGrupo?.campanha || newGrupo.campanha}
+                value={selectedCenario?.campanha || newCenario.campanha}
                 onChange={handleInputChange}
               />
             </div>
             <div className="campo">
               <label>Jogadores</label>
               <textarea
-                name="fichasAtuais"
+                name="inimigosAtuais"
                 value={
-                  selectedGrupo
-                    ? selectedGrupo.fichasAtuais.join(", ")
-                    : newGrupo.fichasAtuais.join(", ")
+                  selectedCenario
+                    ? selectedCenario.inimigosAtuais.join(", ")
+                    : newCenario.inimigosAtuais.join(", ")
                 }
                 onChange={(e) =>
-                  selectedGrupo
-                    ? setSelectedGrupo({
-                        ...selectedGrupo,
-                        fichasAtuais: e.target.value.split(","),
+                  selectedCenario
+                    ? setSelectedCenario({
+                        ...selectedCenario,
+                        inimigosAtuais: e.target.value.split(","),
                       })
-                    : setNewGrupo({
-                        ...newGrupo,
-                        fichasAtuais: e.target.value.split(","),
+                    : setNewCenario({
+                        ...newCenario,
+                        inimigosAtuais: e.target.value.split(","),
                       })
                 }
               />
@@ -122,26 +124,26 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
               <button
                 className="botao-salvar"
                 type="button"
-                onClick={saveGrupo}
+                onClick={saveCenario}
               >
                 Salvar
               </button>
             </div>
           </div>
-        ) : selectedGrupo ? (
+        ) : selectedCenario ? (
           <>
             <div className="linha-campos">
               <div className="campo">
                 <label>Nome</label>
-                <p>{selectedGrupo.nome}</p>
+                <p>{selectedCenario.nome}</p>
               </div>
               <div className="campo">
                 <label>Campanha</label>
-                <p>{selectedGrupo.campanha}</p>
+                <p>{selectedCenario.campanha}</p>
               </div>
               <div>
-                <label>Jogadores</label>
-                {selectedGrupo.fichasAtuais.map((ficha) => (
+                <label>Inimigos</label>
+                {selectedCenario.inimigosAtuais.map((ficha) => (
                   <p key={ficha}>{ficha}</p>
                 ))}
               </div>
@@ -158,7 +160,7 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
                 className="botao-deletar"
                 type="button"
                 onClick={() =>
-                  console.log("Deletado grupo:", selectedGrupo.nome)
+                  console.log("Deletado cenário:", selectedCenario.nome)
                 }
               >
                 Deletar
@@ -166,7 +168,7 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
             </div>
           </>
         ) : (
-          <p>Selecione um grupo para visualizar os detalhes.</p>
+          <p>Selecione um cenário para visualizar os detalhes.</p>
         )}
       </div>
     </div>
