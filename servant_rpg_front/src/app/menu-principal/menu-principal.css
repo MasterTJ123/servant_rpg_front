@@ -27,19 +27,20 @@ ul {
   display: flex;
   justify-content: center; /* Centraliza os itens dentro do container */
   align-items: center;
-  width: 80%;
-  height: 25%;
+  width: 25rem;
+  height: 25rem;
 }
 
-.container li {
+.botoes li {
   position: absolute;
   justify-content: center;
-  transform-origin: 23.125rem;
+  transform-origin: 22rem;
   transform: rotate(calc(360deg / 8 * var(--i)));
-  left: 30%;
+  left: 30.3%;
+  top: 28rem;
+  font-family: inherit;
 }
-
-.container li a {
+.botoes li a {
   transform: rotate(calc(360deg / -8 * var(--i)));
 }
 
@@ -67,16 +68,8 @@ ul {
   left: 21rem;
 } */
 
-.imagem-container {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  justify-content: center;
-}
-
 .imagem {
   align-items: center;
-  max-width: 18.75rem; /* Ajusta o tamanho máximo da imagem */
   height: auto;
 
   z-index: 1000;

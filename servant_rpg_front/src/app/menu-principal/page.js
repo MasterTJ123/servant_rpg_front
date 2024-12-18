@@ -9,53 +9,55 @@ export default function MenuPrincial() {
       {/* Faixa preta no topo */}
       <div className="faixa-preta"></div>
 
-      <ul className="container">
+      <div className="container">
         <div>
           <Image src={logo} className="imagem" alt="Logo de uma Caveira" />
         </div>
-        <li style={{ "--i": 8 }}>
-          <BotaoRedondo
-            url={"/botao1"}
-            texto={"Gerar Encontro"}
-            className="botao"
-          />
-        </li>
-        <li style={{ "--i": 1 }} className="um">
-          <BotaoRedondo
-            url={"/gerenciar-ficha"}
-            texto={"Gerenciar Fichas"}
-            className="botao"
-          />
-        </li>
-        <li style={{ "--i": 4 }} className="quatro">
-          <BotaoRedondo
-            url={"/botao3"}
-            texto={"Relatórios"}
-            className="botao"
-          />
-        </li>
+        <ul className="botoes">
+          <li style={{ "--i": 8 }}>
+            <BotaoRedondo
+              url={"/botao1"}
+              texto={"Gerar Encontro"}
+              className="botao"
+            />
+          </li>
+          <li style={{ "--i": 1 }} className="um">
+            <BotaoRedondo
+              url={"/gerenciar-ficha"}
+              texto={"Gerenciar Fichas"}
+              className="botao"
+            />
+          </li>
+          <li style={{ "--i": 4 }} className="quatro">
+            <BotaoRedondo
+              url={"/botao3"}
+              texto={"Relatórios"}
+              className="botao"
+            />
+          </li>
 
-        <li style={{ "--i": 7 }} className="sete">
-          <BotaoRedondo
-            url={"/botao4"}
-            texto={"Gerenciar Grupo"}
-            className="botao"
-          />
-        </li>
-        <li style={{ "--i": 3 }} className="tres">
-          <BotaoRedondo
-            url={"/botao5"}
-            texto={"Gerenciar Cenário"}
-            className="botao"
-          />
-        </li>
-        <li style={{ "--i": 5 }} className="cinco">
-          <BotaoRedondo url={"/conta"} texto={"Conta"} className="botao" />
-        </li>
-        <li style={{ "--i": 6 }}>
-          <BotaoRedondo url={"/login"} texto={"Sair"} className="botao" />
-        </li>
-      </ul>
+          <li style={{ "--i": 7 }} className="sete">
+            <BotaoRedondo
+              url={"/botao4"}
+              texto={"Gerenciar Grupo"}
+              className="botao"
+            />
+          </li>
+          <li style={{ "--i": 3 }} className="tres">
+            <BotaoRedondo
+              url={"/botao5"}
+              texto={"Gerenciar Cenário"}
+              className="botao"
+            />
+          </li>
+          <li style={{ "--i": 5 }} className="cinco">
+            <BotaoRedondo url={"/conta"} texto={"Conta"} className="botao" />
+          </li>
+          <li style={{ "--i": 6 }}>
+            <BotaoRedondo url={"/login"} texto={"Sair"} className="botao" />
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }
