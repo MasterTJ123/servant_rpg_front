@@ -38,14 +38,14 @@ export default function MenuPrincial() {
 
           <li style={{ "--i": 7 }} className="sete">
             <BotaoRedondo
-              url={"/botao4"}
+              url={"/gerenciar-grupo"}
               texto={"Gerenciar Grupo"}
               className="botao"
             />
           </li>
           <li style={{ "--i": 3 }} className="tres">
             <BotaoRedondo
-              url={"/botao5"}
+              url={"/gerenciar-cenario"}
               texto={"Gerenciar Cenário"}
               className="botao"
             />

@@ -1,5 +1,4 @@
-// This would be in your parent server-side page (for example, `page.tsx`)
-
+"use server";
 import GerenciarFicha from "./gerenciarFicha";
 import { fetchPersonagens } from "./../utils/fetchPersonagens";
 
