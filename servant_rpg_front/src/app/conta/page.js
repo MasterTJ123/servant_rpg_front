@@ -13,6 +13,8 @@ export default function Conta() {
           <input type="password" placeholder="Nova senha" />
         </form>
         <BotaoRedondo url={"/menu-principal"} texto={"Alterar"}></BotaoRedondo>
+
+        <button className="deletar">Deletar</button>
       </div>
     </div>
   );

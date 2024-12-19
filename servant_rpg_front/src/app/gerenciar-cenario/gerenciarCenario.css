@@ -11,12 +11,12 @@ div {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 2rem;
+  min-height: 70vh;
+  padding: 0.42rem;
   box-sizing: border-box;
 }
 
-/* Estilos para o componente Cenario */
+/* Estilos para o componente GerenciarGrupo */
 .main-container {
   width: 100%;
   max-width: 1200px;
@@ -26,15 +26,6 @@ div {
   overflow: hidden;
   padding: 1.5rem;
   box-sizing: border-box;
-}
-
-.conteudo-ficha {
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
 }
 
 /* Cabeçalho */
@@ -63,12 +54,12 @@ div {
   color: #0056b3;
 }
 
-/* Estilo para o seletor de cenários */
-.select-cenario-container {
+/* Estilo para o seletor de grupos */
+.select-group-container {
   margin-bottom: 1.5rem;
 }
 
-.seletor-cenario {
+.seletor-grupo {
   width: 100%;
   padding: 0.75rem;
   font-size: 1rem;
@@ -79,14 +70,13 @@ div {
   box-sizing: border-box;
 }
 
-.seletor-cenario option {
+.seletor-grupo option {
   padding: 0.5rem;
 }
 
-/* Conteúdo principal do Cenario */
-.conteudo-cenario {
+/* Conteúdo principal do GerenciarGrupo */
+.conteudo-ficha {
   display: flex;
-  flex-direction: column;
   padding: 1.5rem;
   background-color: #ffffff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -132,7 +122,7 @@ textarea {
 }
 
 /* Botões de ação */
-.footer-cenario {
+.footer-ficha {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -151,7 +141,7 @@ textarea {
 }
 
 .botao-salvar {
-  background-color: #28a745;
+  background-color: #064414;
 }
 
 .botao-salvar:hover {
@@ -159,7 +149,7 @@ textarea {
 }
 
 .botao-editar {
-  background-color: #007bff;
+  background-color: #092f57;
 }
 
 .botao-editar:hover {
@@ -167,7 +157,7 @@ textarea {
 }
 
 .botao-deletar {
-  background-color: #dc3545;
+  background-color: #50050d;
 }
 
 .botao-deletar:hover {
@@ -189,7 +179,7 @@ textarea {
     margin-bottom: 1rem;
   }
 
-  .footer-cenario {
+  .footer-ficha {
     flex-direction: column;
     align-items: flex-start;
   }
