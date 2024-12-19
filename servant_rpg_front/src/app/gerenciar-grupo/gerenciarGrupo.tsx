@@ -86,113 +86,115 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
       <div className="sidebar">
         <BotaoRedondo url="/menu-principal" texto="Voltar" />
       </div>
-      <div className="mainScreen">
-        <select className="seletor-grupo" onChange={handleChange}>
-          <option value="">Selecione um grupo</option>
-          <option value="Novo grupo">Novo grupo</option>
-          {grupos.map((grupo) => (
-            <option key={grupo.nome} value={grupo.nome}>
-              {grupo.nome}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="conteudo-ficha">
-        {isEditing ? (
-          <form onSubmit={saveGrupo}>
-            <div className="linha-campos">
-              <div className="campo">
-                <label>Nome</label>
-                <input
-                  name="nome"
-                  value={selectedGrupo?.nome || newGrupo.nome}
-                  onChange={handleInputChange}
-                  required
-                />
+      <div className="display">
+        <div className="mainScreen">
+          <select className="seletor-grupo" onChange={handleChange}>
+            <option value="">Selecione um grupo</option>
+            <option value="Novo grupo">Novo grupo</option>
+            {grupos.map((grupo) => (
+              <option key={grupo.nome} value={grupo.nome}>
+                {grupo.nome}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="conteudo-ficha">
+          {isEditing ? (
+            <form onSubmit={saveGrupo}>
+              <div className="linha-campos">
+                <div className="campo">
+                  <label>Nome</label>
+                  <input
+                    name="nome"
+                    value={selectedGrupo?.nome || newGrupo.nome}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="campo">
+                  <label>Campanha</label>
+                  <input
+                    name="campanha"
+                    value={selectedGrupo?.campanha || newGrupo.campanha}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="campo">
+                  <label>Jogadores</label>
+                  <textarea
+                    name="fichasAtuais"
+                    rows={5}
+                    cols={40}
+                    placeholder="Insira os nomes separados por vírgulas"
+                    value={(
+                      selectedGrupo?.fichasAtuais || newGrupo.fichasAtuais
+                    ).join(", ")}
+                    onChange={(e) =>
+                      selectedGrupo
+                        ? setSelectedGrupo({
+                            ...selectedGrupo,
+                            fichasAtuais: e.target.value
+                              .split(",")
+                              .map((item) => item.trim()),
+                          })
+                        : setNewGrupo({
+                            ...newGrupo,
+                            fichasAtuais: e.target.value
+                              .split(",")
+                              .map((item) => item.trim()),
+                          })
+                    }
+                  />
+                </div>
+                <div className="footer-ficha">
+                  <button className="botao-salvar" type="submit">
+                    Salvar
+                  </button>
+                </div>
               </div>
-              <div className="campo">
-                <label>Campanha</label>
-                <input
-                  name="campanha"
-                  value={selectedGrupo?.campanha || newGrupo.campanha}
-                  onChange={handleInputChange}
-                  required
-                />
+            </form>
+          ) : selectedGrupo ? (
+            <>
+              <div className="linha-campos">
+                <div className="campo">
+                  <label>Nome</label>
+                  <div>{selectedGrupo.nome}</div>
+                </div>
+                <div className="campo">
+                  <label>Campanha</label>
+                  <div>{selectedGrupo.campanha}</div>
+                </div>
+                <div className="campo">
+                  <label>Jogadores</label>
+                  {selectedGrupo.fichasAtuais.map((ficha) => (
+                    <div key={ficha}>{ficha}</div>
+                  ))}
+                </div>
               </div>
-              <div className="campo">
-                <label>Jogadores</label>
-                <textarea
-                  name="fichasAtuais"
-                  rows={5}
-                  cols={40}
-                  placeholder="Insira os nomes separados por vírgulas"
-                  value={(
-                    selectedGrupo?.fichasAtuais || newGrupo.fichasAtuais
-                  ).join(", ")}
-                  onChange={(e) =>
-                    selectedGrupo
-                      ? setSelectedGrupo({
-                          ...selectedGrupo,
-                          fichasAtuais: e.target.value
-                            .split(",")
-                            .map((item) => item.trim()),
-                        })
-                      : setNewGrupo({
-                          ...newGrupo,
-                          fichasAtuais: e.target.value
-                            .split(",")
-                            .map((item) => item.trim()),
-                        })
+              <div className="footer-ficha">
+                <button
+                  className="botao-editar"
+                  type="button"
+                  onClick={startEditing}
+                >
+                  Editar
+                </button>
+                <button
+                  className="botao-deletar"
+                  type="button"
+                  onClick={() =>
+                    console.log("Deletado grupo:", selectedGrupo.nome)
                   }
-                />
+                >
+                  Deletar
+                </button>
               </div>
-            </div>
-            <div className="footer-ficha">
-              <button className="botao-salvar" type="submit">
-                Salvar
-              </button>
-            </div>
-          </form>
-        ) : selectedGrupo ? (
-          <>
-            <div className="linha-campos">
-              <div className="campo">
-                <label>Nome</label>
-                <div>{selectedGrupo.nome}</div>
-              </div>
-              <div className="campo">
-                <label>Campanha</label>
-                <div>{selectedGrupo.campanha}</div>
-              </div>
-              <div className="campo">
-                <label>Jogadores</label>
-                {selectedGrupo.fichasAtuais.map((ficha) => (
-                  <div key={ficha}>{ficha}</div>
-                ))}
-              </div>
-            </div>
-            <div className="footer-ficha">
-              <button
-                className="botao-editar"
-                type="button"
-                onClick={startEditing}
-              >
-                Editar
-              </button>
-              <button
-                className="botao-deletar"
-                type="button"
-                onClick={() =>
-                  console.log("Deletado grupo:", selectedGrupo.nome)
-                }
-              >
-                Deletar
-              </button>
-            </div>
-          </>
-        ) : (
-          <p>Selecione um grupo para visualizar os detalhes.</p>
-        )}
+            </>
+          ) : (
+            <p>Selecione um grupo para visualizar os detalhes.</p>
+          )}
+        </div>
       </div>
     </div>
   );

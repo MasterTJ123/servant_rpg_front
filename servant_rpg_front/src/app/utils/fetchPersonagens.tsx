@@ -1,10 +1,25 @@
 import personagens from "../../../public/personagens_model/personagens.json";
 
 export async function fetchPersonagens() {
-  //use essa função para buscar a lista de personagens cadastrados do banco
-  //   const response = await fetch(
-  //     "../../../public/personagens_model/personagens.json"
-  //   ); // Replace with the actual path to your JSON or API
-  //const personagens = await response.json();
+  // try {
+  //   const response = await fetch("http://localhost:8000/en/api/combatants/", {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   });
+
+  //   if (!response.ok) {
+  //     throw new Error(
+  //       `Failed to fetch: ${response.status} ${response.statusText}`
+  //     );
+  //   }
+
+  //   const personagens = await response.json();
+  //   return personagens;
+  // } catch (error) {
+  //   console.error("Error fetching personagens:", error);
+  //   throw error;
+  // }
   return personagens;
 }

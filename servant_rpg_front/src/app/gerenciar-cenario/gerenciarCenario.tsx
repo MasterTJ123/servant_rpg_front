@@ -87,98 +87,100 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
         <BotaoRedondo url="/menu-principal" texto="Voltar" />
         <a className="botao-voltar" type="button" href="/menu-principal"></a>
       </div>
-      <div className="mainScreen">
-        <select className="seletor-cenario" onChange={handleChange}>
-          <option value="">Selecione um cenário</option>
-          <option value="Novo cenário">Novo cenário</option>
-          {cenarios.map((cenario) => (
-            <option key={cenario.nome} value={cenario.nome}>
-              {cenario.nome}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="conteudo-ficha">
-        {isEditing ? (
-          <div className="linha-campos">
-            <div className="campo">
-              <label>Nome</label>
-              <input
-                name="nome"
-                value={selectedCenario?.nome || newCenario.nome}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="campo">
-              <label>Campanha</label>
-              <input
-                name="campanha"
-                value={selectedCenario?.campanha || newCenario.campanha}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="campo">
-              <label>Jogadores</label>
-              <textarea
-                name="inimigosAtuais"
-                value={
-                  selectedCenario
-                    ? selectedCenario.inimigosAtuais.join(", ")
-                    : newCenario.inimigosAtuais.join(", ")
-                }
-                onChange={handleInimigosChange}
-              />
-            </div>
-            <div className="footer-ficha">
-              <button
-                className="botao-salvar"
-                type="button"
-                onClick={saveCenario}
-              >
-                Salvar
-              </button>
-            </div>
-          </div>
-        ) : selectedCenario ? (
-          <>
+      <div className="display">
+        <div className="mainScreen">
+          <select className="seletor-cenario" onChange={handleChange}>
+            <option value="">Selecione um cenário</option>
+            <option value="Novo cenário">Novo cenário</option>
+            {cenarios.map((cenario) => (
+              <option key={cenario.nome} value={cenario.nome}>
+                {cenario.nome}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="conteudo-ficha">
+          {isEditing ? (
             <div className="linha-campos">
               <div className="campo">
                 <label>Nome</label>
-                <div>{selectedCenario.nome}</div>
+                <input
+                  name="nome"
+                  value={selectedCenario?.nome || newCenario.nome}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="campo">
                 <label>Campanha</label>
-                <div>{selectedCenario.campanha}</div>
+                <input
+                  name="campanha"
+                  value={selectedCenario?.campanha || newCenario.campanha}
+                  onChange={handleInputChange}
+                />
               </div>
-              <div>
-                <label>Inimigos</label>
-                {selectedCenario.inimigosAtuais.map((ficha) => (
-                  <div key={ficha}>{ficha}</div>
-                ))}
+              <div className="campo">
+                <label>Jogadores</label>
+                <textarea
+                  name="inimigosAtuais"
+                  value={
+                    selectedCenario
+                      ? selectedCenario.inimigosAtuais.join(", ")
+                      : newCenario.inimigosAtuais.join(", ")
+                  }
+                  onChange={handleInimigosChange}
+                />
+              </div>
+              <div className="footer-ficha">
+                <button
+                  className="botao-salvar"
+                  type="button"
+                  onClick={saveCenario}
+                >
+                  Salvar
+                </button>
               </div>
             </div>
-            <div className="footer-ficha">
-              <button
-                className="botao-editar"
-                type="button"
-                onClick={startEditing}
-              >
-                Editar
-              </button>
-              <button
-                className="botao-deletar"
-                type="button"
-                onClick={() =>
-                  console.log("Deletado cenário:", selectedCenario.nome)
-                }
-              >
-                Deletar
-              </button>
-            </div>
-          </>
-        ) : (
-          <p>Selecione um cenário para visualizar os detalhes.</p>
-        )}
+          ) : selectedCenario ? (
+            <>
+              <div className="linha-campos">
+                <div className="campo">
+                  <label>Nome</label>
+                  <div>{selectedCenario.nome}</div>
+                </div>
+                <div className="campo">
+                  <label>Campanha</label>
+                  <div>{selectedCenario.campanha}</div>
+                </div>
+                <div>
+                  <label>Inimigos</label>
+                  {selectedCenario.inimigosAtuais.map((ficha) => (
+                    <div key={ficha}>{ficha}</div>
+                  ))}
+                </div>
+              </div>
+              <div className="footer-ficha">
+                <button
+                  className="botao-editar"
+                  type="button"
+                  onClick={startEditing}
+                >
+                  Editar
+                </button>
+                <button
+                  className="botao-deletar"
+                  type="button"
+                  onClick={() =>
+                    console.log("Deletado cenário:", selectedCenario.nome)
+                  }
+                >
+                  Deletar
+                </button>
+              </div>
+            </>
+          ) : (
+            <p>Selecione um cenário para visualizar os detalhes.</p>
+          )}
+        </div>
       </div>
     </div>
   );
