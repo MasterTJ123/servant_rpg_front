@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import "./gerenciarCenario.css";
+import BotaoRedondo from "../components/botaoRedondo/botaoRedondo"; // Ajuste o caminho conforme necessário
 
 interface Cenario {
   nome: string;
@@ -48,6 +49,24 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
     }
   };
 
+  const handleInimigosChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const { value } = event.target;
+    const inimigosArray = value.split(",").map((item) => item.trim());
+    if (selectedCenario) {
+      setSelectedCenario({
+        ...selectedCenario,
+        inimigosAtuais: inimigosArray,
+      });
+    } else {
+      setNewCenario({
+        ...newCenario,
+        inimigosAtuais: inimigosArray,
+      });
+    }
+  };
+
   const saveCenario = () => {
     if (selectedCenario) {
       // Logic to update the existing scenario
@@ -64,9 +83,9 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
   return (
     <div>
       <div className="sidebar">
-        <a className="botao-voltar" type="button" href="/menu-principal">
-          Voltar
-        </a>
+        {/* Botão redondo colocado atrás do texto "Voltar" */}
+        <BotaoRedondo url="/menu-principal" texto="Voltar" />
+        <a className="botao-voltar" type="button" href="/menu-principal"></a>
       </div>
       <div className="mainScreen">
         <select className="seletor-cenario" onChange={handleChange}>
@@ -107,17 +126,7 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
                     ? selectedCenario.inimigosAtuais.join(", ")
                     : newCenario.inimigosAtuais.join(", ")
                 }
-                onChange={(e) =>
-                  selectedCenario
-                    ? setSelectedCenario({
-                        ...selectedCenario,
-                        inimigosAtuais: e.target.value.split(","),
-                      })
-                    : setNewCenario({
-                        ...newCenario,
-                        inimigosAtuais: e.target.value.split(","),
-                      })
-                }
+                onChange={handleInimigosChange}
               />
             </div>
             <div className="footer-ficha">
@@ -135,16 +144,16 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
             <div className="linha-campos">
               <div className="campo">
                 <label>Nome</label>
-                <p>{selectedCenario.nome}</p>
+                <div>{selectedCenario.nome}</div>
               </div>
               <div className="campo">
                 <label>Campanha</label>
-                <p>{selectedCenario.campanha}</p>
+                <div>{selectedCenario.campanha}</div>
               </div>
               <div>
                 <label>Inimigos</label>
                 {selectedCenario.inimigosAtuais.map((ficha) => (
-                  <p key={ficha}>{ficha}</p>
+                  <div key={ficha}>{ficha}</div>
                 ))}
               </div>
             </div>

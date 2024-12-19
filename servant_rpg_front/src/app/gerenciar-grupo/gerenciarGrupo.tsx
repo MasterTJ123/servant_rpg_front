@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 import "./gerenciarGrupo.css";
+import BotaoRedondo from "../components/botaoRedondo/botaoRedondo"; // Ajuste o caminho conforme necessário
 
 interface Grupo {
   nome: string;
   campanha: string;
-  fichasAtuais: string[]; // Array with character names
+  fichasAtuais: string[]; // Array com os nomes dos jogadores
 }
 
 interface GruposProps {
@@ -20,7 +21,7 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
     campanha: "",
     fichasAtuais: [],
   });
-  const [erro, setErro] = useState<string>();
+  const [erro, setErro] = useState<string>("");
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
@@ -41,50 +42,41 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
-    if (selectedGrupo) {
-      setSelectedGrupo({ ...selectedGrupo, [name]: value });
-    } else {
-      setNewGrupo({ ...newGrupo, [name]: value });
-    }
+    const updateGrupo = (grupo: Grupo) => ({ ...grupo, [name]: value });
+
+    selectedGrupo
+      ? setSelectedGrupo(updateGrupo(selectedGrupo))
+      : setNewGrupo(updateGrupo(newGrupo));
   };
 
-  const saveGrupo = async (e) => {
+  const saveGrupo = async (e: React.FormEvent) => {
     e.preventDefault();
+    const grupo = selectedGrupo || newGrupo;
 
-    if (selectedGrupo) {
-      // TODO Adicionar aqui a função para editar o grupo no banco
-      console.log("Updated group:", selectedGrupo);
-    } else {
-      // ele vai atualizar de cara, ou precisa dar um refresh na página? Pq está vindo da pagina anterior
-      try {
-        const response = await fetch("http://localhost:8000/en/api/grupo/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nome: newGrupo.nome,
-            campanha: newGrupo.campanha,
-            fichasAtuais: newGrupo.fichasAtuais,
-          }),
-          credentials: "include",
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          const firstKey = Object.keys(errorData)[0];
-          const errorMessage = errorData[firstKey]?.[0];
-          setErro(errorMessage);
-          return;
-        }
+    try {
+      const method = selectedGrupo ? "PUT" : "POST";
+      const response = await fetch("http://localhost:8000/en/api/grupo/", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(grupo),
+        credentials: "include",
+      });
 
-        const data = await response.json();
-        console.log(data);
-      } catch (error) {
-        console.error(error);
-        setErro("Erro inesperado! Tente novamente mais tarde!");
+      if (!response.ok) {
+        const errorData = await response.json();
+        const firstKey = Object.keys(errorData)[0];
+        setErro(errorData[firstKey]?.[0]);
+        return;
       }
+
+      const data = await response.json();
+      console.log(`${selectedGrupo ? "Grupo editado" : "Grupo criado"}:`, data);
+    } catch (error) {
+      console.error(error);
+      setErro("Erro inesperado! Tente novamente mais tarde!");
+    } finally {
+      setIsEditing(false);
     }
-    setIsEditing(false);
   };
 
   const startEditing = () => setIsEditing(true);
@@ -92,9 +84,7 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
   return (
     <div>
       <div className="sidebar">
-        <a className="botao-voltar" type="button" href="/menu-principal">
-          Voltar
-        </a>
+        <BotaoRedondo url="/menu-principal" texto="Voltar" />
       </div>
       <div className="mainScreen">
         <select className="seletor-grupo" onChange={handleChange}>
@@ -109,70 +99,75 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
       </div>
       <div className="conteudo-ficha">
         {isEditing ? (
-          <div className="linha-campos">
-            <div className="campo">
-              <label>Nome</label>
-              <input
-                name="nome"
-                value={selectedGrupo?.nome || newGrupo.nome}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="campo">
-              <label>Campanha</label>
-              <input
-                name="campanha"
-                value={selectedGrupo?.campanha || newGrupo.campanha}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="campo">
-              <label>Jogadores</label>
-              <textarea
-                name="fichasAtuais"
-                value={
-                  selectedGrupo
-                    ? selectedGrupo.fichasAtuais.join(", ")
-                    : newGrupo.fichasAtuais.join(", ")
-                }
-                onChange={(e) =>
-                  selectedGrupo
-                    ? setSelectedGrupo({
-                        ...selectedGrupo,
-                        fichasAtuais: e.target.value.split(","),
-                      })
-                    : setNewGrupo({
-                        ...newGrupo,
-                        fichasAtuais: e.target.value.split(","),
-                      })
-                }
-              />
+          <form onSubmit={saveGrupo}>
+            <div className="linha-campos">
+              <div className="campo">
+                <label>Nome</label>
+                <input
+                  name="nome"
+                  value={selectedGrupo?.nome || newGrupo.nome}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="campo">
+                <label>Campanha</label>
+                <input
+                  name="campanha"
+                  value={selectedGrupo?.campanha || newGrupo.campanha}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="campo">
+                <label>Jogadores</label>
+                <textarea
+                  name="fichasAtuais"
+                  rows={5}
+                  cols={40}
+                  placeholder="Insira os nomes separados por vírgulas"
+                  value={(
+                    selectedGrupo?.fichasAtuais || newGrupo.fichasAtuais
+                  ).join(", ")}
+                  onChange={(e) =>
+                    selectedGrupo
+                      ? setSelectedGrupo({
+                          ...selectedGrupo,
+                          fichasAtuais: e.target.value
+                            .split(",")
+                            .map((item) => item.trim()),
+                        })
+                      : setNewGrupo({
+                          ...newGrupo,
+                          fichasAtuais: e.target.value
+                            .split(",")
+                            .map((item) => item.trim()),
+                        })
+                  }
+                />
+              </div>
             </div>
             <div className="footer-ficha">
-              <button
-                className="botao-salvar"
-                type="button"
-                onClick={saveGrupo}
-              >
+              <button className="botao-salvar" type="submit">
                 Salvar
               </button>
             </div>
-          </div>
+          </form>
         ) : selectedGrupo ? (
           <>
             <div className="linha-campos">
               <div className="campo">
                 <label>Nome</label>
-                <p>{selectedGrupo.nome}</p>
+                <div>{selectedGrupo.nome}</div>
               </div>
               <div className="campo">
                 <label>Campanha</label>
-                <p>{selectedGrupo.campanha}</p>
+                <div>{selectedGrupo.campanha}</div>
               </div>
-              <div>
+              <div className="campo">
                 <label>Jogadores</label>
                 {selectedGrupo.fichasAtuais.map((ficha) => (
-                  <p key={ficha}>{ficha}</p>
+                  <div key={ficha}>{ficha}</div>
                 ))}
               </div>
             </div>
