@@ -136,10 +136,7 @@ export default function CadastroUsuario() {
                         placeholder="Confirmar senha"
                     />
                 </form>
-                <BotaoRedondoSubmit
-                    handleSubmit={handleSubmit}
-                    texto={"Cadastrar"}
-                ></BotaoRedondoSubmit>
+                <BotaoRedondoSubmit handleSubmit={handleSubmit} texto={"Cadastrar"}></BotaoRedondoSubmit>
             </div>
         </div>
     );
