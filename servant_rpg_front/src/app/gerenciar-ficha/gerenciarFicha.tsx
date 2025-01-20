@@ -1,22 +1,24 @@
 "use client"; // This will ensure it is client-side rendered
 import { useState, useEffect } from "react";
 import "./gerenciarFicha.css";
+import { deletePersonagem } from "../utils/crudPersonagens";
 
 interface Personagem {
-  nome: string;
-  nivel: number;
-  classe: string;
-  familia: string;
-  vida: number;
-  ac: number;
-  iniciativa: string;
-  tamanho: string;
-  spellSlots: number;
-  profA: string;
-  profM: string;
-  profD: string;
-  caracteristicas: string;
-  jogador: boolean;
+  id: number;
+  name: string;
+  level: number;
+  choosen_class: string;
+  family: string;
+  life: number;
+  armor: number;
+  initiative: number;
+  spell_slots: string; // Keeping it as string since the backend returns it this way
+  weapon_proficiency: number;
+  magic_proficiency: number;
+  size: number;
+  traits: string;
+  include_generative: boolean;
+  user: number; // Assuming this refers to the user ID
 }
 
 interface PaginaMostrarPersonagemProps {
@@ -31,9 +33,14 @@ export default function GerenciarFicha({
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPersonagem = personagens.find(
-      (personagem) => personagem.nome === event.target.value
+      (personagem) => personagem.name === event.target.value
     );
     setSelectedPersonagem(selectedPersonagem || null);
+  };
+
+  const handleDeleteCharacter = async (id: number) => {
+    console.log("Deletando:", selectedPersonagem);
+    deletePersonagem(id);
   };
 
   return (
@@ -42,8 +49,8 @@ export default function GerenciarFicha({
         <select className="seletor-personagem" onChange={handleChange}>
           <option value="">Selecione um personagem</option>
           {personagens.map((personagem) => (
-            <option key={personagem.nome} value={personagem.nome}>
-              {personagem.nome}
+            <option key={personagem.name} value={personagem.name}>
+              {personagem.name}
             </option>
           ))}
         </select>
@@ -64,79 +71,79 @@ export default function GerenciarFicha({
             <div className="linha-campos">
               <div className="campo">
                 <label>Nome</label>
-                <p>{selectedPersonagem.nome}</p>
+                <p>{selectedPersonagem.name}</p>
               </div>
               <div className="campo">
                 <label>Nível</label>
-                <p>{selectedPersonagem.nivel}</p>
+                <p>{selectedPersonagem.level}</p>
               </div>
             </div>
             <div className="linha-campos">
               <div className="campo">
                 <label>Classe</label>
-                <p>{selectedPersonagem.classe}</p>
+                <p>{selectedPersonagem.choosen_class}</p>
               </div>
               <div className="campo">
                 <label>Família</label>
-                <p>{selectedPersonagem.familia}</p>
+                <p>{selectedPersonagem.family}</p>
               </div>
             </div>
             <div className="linha-campos">
               <div className="campo">
                 <label>Vida</label>
-                <p>{selectedPersonagem.vida}</p>
+                <p>{selectedPersonagem.life}</p>
               </div>
               <div className="campo">
                 <label>AC</label>
-                <p>{selectedPersonagem.ac}</p>
+                <p>{selectedPersonagem.armor}</p>
               </div>
             </div>
             <div className="linha-campos">
               <div className="campo">
                 <label>Iniciativa</label>
-                <p>{selectedPersonagem.iniciativa}</p>
+                <p>{selectedPersonagem.initiative}</p>
               </div>
               <div className="campo">
                 <label>Tamanho</label>
-                <p>{selectedPersonagem.tamanho}</p>
+                <p>{selectedPersonagem.size}</p>
               </div>
             </div>
             <div className="linha-campos">
               <div className="campo">
                 <label>Spell Slots</label>
-                <p>{selectedPersonagem.spellSlots}</p>
+                <p>{selectedPersonagem.spell_slots}</p>
               </div>
               <div className="campo">
                 <label>Prof A</label>
-                <p>{selectedPersonagem.profA}</p>
+                <p>{selectedPersonagem.weapon_proficiency}</p>
               </div>
             </div>
             <div className="linha-campos">
               <div className="campo">
                 <label>Prof M</label>
-                <p>{selectedPersonagem.profM}</p>
-              </div>
-              <div className="campo">
-                <label>Prof D</label>
-                <p>{selectedPersonagem.profD}</p>
+                <p>{selectedPersonagem.magic_proficiency}</p>
               </div>
             </div>
             <div className="linha-campo-unico">
               <div className="campo">
                 <label>Características</label>
-                <p>{selectedPersonagem.caracteristicas}</p>
+                <p>{selectedPersonagem.traits}</p>
               </div>
             </div>
             <div className="footer-ficha">
               <label className="checkbox-jogador">
                 <input
                   type="checkbox"
-                  checked={selectedPersonagem.jogador}
+                  checked={selectedPersonagem.include_generative}
                   readOnly
                 />
                 Jogador
               </label>
-              <button className="botao-deletar" type="button">
+              <button
+                className="botao-deletar"
+                type="button"
+                onClick={() => handleDeleteCharacter(selectedPersonagem.id)}
+              >
                 Deletar
               </button>
             </div>

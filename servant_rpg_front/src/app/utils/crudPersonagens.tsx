@@ -30,7 +30,6 @@ export async function fetchPersonagens() {
   }
 }
 //Mandar na requisicao o id do usuario...precisa não, já faz isso por baixo dos panos
-import { FormEvent, useState } from "react";
 
 export async function sendPersonagem(formData: FormData) {
   const csrfToken = document.cookie
@@ -79,5 +78,25 @@ export async function sendPersonagem(formData: FormData) {
   } catch (error) {
     console.error("Error sending personagem:", error);
     throw error;
+  }
+}
+
+export async function deletePersonagem(id: number): Promise<void> {
+  try {
+    const response = await fetch(`/api/combatants/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Assuming you're using a token stored in localStorage for authentication
+      }, //sera que esse auth diferente da certo, ou vai dar 401?
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete the combatant");
+    }
+
+    console.log("Combatant deleted successfully");
+  } catch (error) {
+    console.error("Error deleting combatant:", error);
   }
 }

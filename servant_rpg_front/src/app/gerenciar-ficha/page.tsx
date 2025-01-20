@@ -26,7 +26,7 @@ export default function Pagina() {
     return <div>{error}</div>;
   }
 
-  console.log(personagens);
+  //console.log("Personagens carregados:", personagens);
 
   return <GerenciarFicha personagens={personagens} />;
 }
