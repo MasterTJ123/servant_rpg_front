@@ -122,3 +122,17 @@ p {
 .botao-deletar:hover {
   background-color: #bd2130;
 }
+
+.botao-editar {
+  padding: 0.625rem 1.25rem;
+  background-color: #47b92a;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.botao-editar:hover {
+  background-color: #b4d6b9;
+}

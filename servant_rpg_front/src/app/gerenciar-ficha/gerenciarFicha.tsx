@@ -1,25 +1,10 @@
 "use client"; // This will ensure it is client-side rendered
 import { useState, useEffect } from "react";
 import "./gerenciarFicha.css";
-import { deletePersonagem } from "../utils/crudPersonagens";
-
-interface Personagem {
-  id: number;
-  name: string;
-  level: number;
-  choosen_class: string;
-  family: string;
-  life: number;
-  armor: number;
-  initiative: number;
-  spell_slots: string; // Keeping it as string since the backend returns it this way
-  weapon_proficiency: number;
-  magic_proficiency: number;
-  size: number;
-  traits: string;
-  include_generative: boolean;
-  user: number; // Assuming this refers to the user ID
-}
+import { deletePersonagem, Personagem } from "../utils/crudPersonagens";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface PaginaMostrarPersonagemProps {
   personagens: Personagem[];
@@ -31,16 +16,31 @@ export default function GerenciarFicha({
   const [selectedPersonagem, setSelectedPersonagem] =
     useState<Personagem | null>(null);
 
+  const [positionSelected, setPositionSelected] = useState<number>();
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPersonagem = personagens.find(
       (personagem) => personagem.name === event.target.value
     );
+
+    const position = personagens.findIndex(
+      (personagem) => personagem.name === event.target.value
+    );
     setSelectedPersonagem(selectedPersonagem || null);
+    setPositionSelected(position);
   };
+
+  const router = useRouter();
+
+  // const handleEditSheet = () => {
+  //   router.push(`/gerenciar-ficha/editar-ficha/${selectedPersonagem.id}`);
+
+  // };
 
   const handleDeleteCharacter = async (id: number) => {
     console.log("Deletando:", selectedPersonagem);
     deletePersonagem(id);
+    personagens.splice(positionSelected);
     setSelectedPersonagem(null);
     //Esta deletando corretamente
     //TODO preciso dar um jeito de tirar o personagem da listagem atual
@@ -142,6 +142,16 @@ export default function GerenciarFicha({
                 />
                 Jogador
               </label>
+              <button className="botao-editar" type="button">
+                {" "}
+                <Link
+                  href={{
+                    pathname: `/gerenciar-ficha/editar-ficha/${selectedPersonagem.id}`,
+                  }}
+                >
+                  Editar
+                </Link>
+              </button>
               <button
                 className="botao-deletar"
                 type="button"
