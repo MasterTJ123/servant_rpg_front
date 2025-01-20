@@ -83,13 +83,17 @@ export async function sendPersonagem(formData: FormData) {
 
 export async function deletePersonagem(id: number): Promise<void> {
   try {
-    const response = await fetch(`/api/combatants/${id}/`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Assuming you're using a token stored in localStorage for authentication
-      }, //sera que esse auth diferente da certo, ou vai dar 401?
-    });
+    const response = await fetch(
+      `http://localhost:8000/en/api/combatants/${id}/`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          //Authorization: `Bearer ${localStorage.getItem("token")}`, // Assuming you're using a token stored in localStorage for authentication
+        }, //sera que esse auth diferente da certo, ou vai dar 401?
+        credentials: "include",
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to delete the combatant");
