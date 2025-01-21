@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./gerenciarGrupo.css";
 import BotaoRedondo from "../components/botaoRedondo/botaoRedondo"; // Ajuste o caminho conforme necessário
+import { fetchPersonagens, Personagem } from "../utils/crudPersonagens";
 
 interface Grupo {
   nome: string;
@@ -22,6 +23,43 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
     fichasAtuais: [],
   });
   const [erro, setErro] = useState<string>("");
+
+  //Preciso puxar todos os personagens quando criar um grupo novo
+  //E quando editar...Mais facil puxar tudo de um vez quando der o loading na pagina
+  const [personagens, setPersonagens] = useState([]);
+  const [selectedPersonagem, setSelectedPersonagem] =
+    useState<Personagem | null>(null);
+
+  useEffect(() => {
+    const loadPersonagens = async () => {
+      try {
+        const data = await fetchPersonagens();
+        setPersonagens(data); // Update state with fetched data
+      } catch (error) {
+        console.log(error);
+        setErro("Error fetching personagens");
+        setPersonagens([]); // Return empty list in case of error
+      }
+    };
+
+    loadPersonagens();
+  }, []); // Empty dependency array ensures this runs once on component mount
+
+  const handleChangePersonagens = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedPersonagem = personagens.find(
+      (personagem) => personagem.name === event.target.value
+    );
+
+    const position = personagens.findIndex(
+      (personagem) => personagem.name === event.target.value
+    );
+    setSelectedPersonagem(selectedPersonagem || null);
+  };
+
+  //To fazendo pela lista...e nao eh assim. Preciso fazer de um jeito melhor
+  //Tem que ser uma tabela, e ir selecionando com um checkbox
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
@@ -55,7 +93,7 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
 
     try {
       const method = selectedGrupo ? "PUT" : "POST";
-      const response = await fetch("http://localhost:8000/en/api/grupo/", {
+      const response = await fetch("http://localhost:8000/en/api/grupos/", {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(grupo),
@@ -122,30 +160,17 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
                 </div>
                 <div className="campo">
                   <label>Jogadores</label>
-                  <textarea
-                    name="fichasAtuais"
-                    rows={5}
-                    cols={40}
-                    placeholder="Insira os nomes separados por vírgulas"
-                    value={(
-                      selectedGrupo?.fichasAtuais || newGrupo.fichasAtuais
-                    ).join(", ")}
-                    onChange={(e) =>
-                      selectedGrupo
-                        ? setSelectedGrupo({
-                            ...selectedGrupo,
-                            fichasAtuais: e.target.value
-                              .split(",")
-                              .map((item) => item.trim()),
-                          })
-                        : setNewGrupo({
-                            ...newGrupo,
-                            fichasAtuais: e.target.value
-                              .split(",")
-                              .map((item) => item.trim()),
-                          })
-                    }
-                  />
+                  <select
+                    className="seletor-personagem"
+                    onChange={handleChangePersonagens}
+                  >
+                    <option value="">Selecione um personagem</option>
+                    {personagens.map((personagem) => (
+                      <option key={personagem.name} value={personagem.name}>
+                        {personagem.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="footer-ficha">
                   <button className="botao-salvar" type="submit">
