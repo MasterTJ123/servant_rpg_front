@@ -7,68 +7,72 @@ import { fetchPersonagens, Personagem } from "../utils/crudPersonagens";
 interface Grupo {
   nome: string;
   campanha: string;
-  fichasAtuais: string[]; // Array com os nomes dos jogadores
+  fichasAtuais: number[]; // Array com os nomes dos jogadores
 }
 
+interface GrupoStrings {
+  nome: string;
+  campanha: string;
+}
 interface GruposProps {
   grupos: Grupo[];
+  personagens: Personagem[];
 }
 
-export default function GerenciarGrupo({ grupos }: GruposProps) {
-  const [selectedGrupo, setSelectedGrupo] = useState<Grupo | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [newGrupo, setNewGrupo] = useState<Grupo>({
+export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
+  const [selectedGrupo, setSelectedGrupo] = useState<Grupo | null>(null); //controla qual grupo foi selecionado no dropdown
+  const [isEditing, setIsEditing] = useState(false); //controla se o grupo esta sendo editado
+  const [newGrupo, setNewGrupo] = useState<GrupoStrings>({
     nome: "",
     campanha: "",
-    fichasAtuais: [],
-  });
+    //fichasAtuais: [],
+  }); //Cria um estado para salvar o novo grupo
   const [erro, setErro] = useState<string>("");
 
-  //Preciso puxar todos os personagens quando criar um grupo novo
-  //E quando editar...Mais facil puxar tudo de um vez quando der o loading na pagina
-  const [personagens, setPersonagens] = useState([]);
-  const [selectedPersonagem, setSelectedPersonagem] =
-    useState<Personagem | null>(null);
+  //
+  //preciso de um estado para controlar qual personagem esta selecionado
+  //controla se a checkbox esta selecionada ou nao
+  const [selectedPersonagens, setSelectedPersonagens] = useState(
+    new Array(personagens.length).fill(false)
+  );
 
-  useEffect(() => {
-    const loadPersonagens = async () => {
-      try {
-        const data = await fetchPersonagens();
-        setPersonagens(data); // Update state with fetched data
-      } catch (error) {
-        console.log(error);
-        setErro("Error fetching personagens");
-        setPersonagens([]); // Return empty list in case of error
-      }
-    };
-
-    loadPersonagens();
-  }, []); // Empty dependency array ensures this runs once on component mount
-
-  const handleChangePersonagens = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedPersonagem = personagens.find(
-      (personagem) => personagem.name === event.target.value
+  //tabela com checkbox
+  const renderPersonagens = (personagem: Personagem, index: number) => {
+    return (
+      <li key={index} className="personagem-disponivel">
+        <input
+          type="checkbox"
+          id={`personagem-disponivel-${personagem.id}`}
+          value={personagem.id}
+          checked={selectedPersonagens[index]}
+          onChange={() => handleSelectPersonagemChange(index)}
+        />
+        <h3 className="p-2">{personagem.name}</h3>
+      </li>
     );
-
-    const position = personagens.findIndex(
-      (personagem) => personagem.name === event.target.value
-    );
-    setSelectedPersonagem(selectedPersonagem || null);
   };
 
-  //To fazendo pela lista...e nao eh assim. Preciso fazer de um jeito melhor
-  //Tem que ser uma tabela, e ir selecionando com um checkbox
+  //Evento de selecionar os personagens da lista
+  const handleSelectPersonagemChange = (position) => {
+    const updatedCheckedState = selectedPersonagens.map((personagem, index) =>
+      index === position ? !personagem : personagem
+    );
+    setSelectedPersonagens(updatedCheckedState);
+    //preciso fazer mais alguma coisa aqui?
+  };
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //TODO preciso mostrar em um campo quais foram selecionados
+
+  const handleChangeGroupDropdown = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selectedValue = event.target.value;
     setErro("");
 
     if (selectedValue === "Novo grupo") {
       setSelectedGrupo(null);
       setIsEditing(true);
-      setNewGrupo({ nome: "", campanha: "", fichasAtuais: [] });
+      setNewGrupo({ nome: "", campanha: "" });
     } else {
       const grupo = grupos.find((grupo) => grupo.nome === selectedValue);
       setSelectedGrupo(grupo || null);
@@ -76,30 +80,36 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
     }
   };
 
-  const handleInputChange = (
+  const handleInputChangeWhenEditingGroup = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
     const updateGrupo = (grupo: Grupo) => ({ ...grupo, [name]: value });
 
-    selectedGrupo
-      ? setSelectedGrupo(updateGrupo(selectedGrupo))
-      : setNewGrupo(updateGrupo(newGrupo));
+    // selectedGrupo
+    //   ? setSelectedGrupo(updateGrupo(selectedGrupo))
+    //   : setNewGrupo(updateGrupo(newGrupo));
   };
 
   const saveGrupo = async (e: React.FormEvent) => {
     e.preventDefault();
-    const grupo = selectedGrupo || newGrupo;
+    //preciso pegar as fichas selecionadas e salvar no grupo
+    const infos = newGrupo;
+    const selecionados = personagens.filter(
+      (_, index) => selectedPersonagens[index]
+    );
+    const selecionadosId = selecionados.map((ficha) => ficha.id);
+    //grupo.fichasAtuais = selecionadosId;
+    console.log(infos);
 
     try {
-      const method = selectedGrupo ? "PUT" : "POST";
-      const response = await fetch("http://localhost:8000/en/api/grupos/", {
+      const method = "POST";
+      const response = await fetch("http://localhost:8000/en/api/groups/", {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(grupo),
+        body: JSON.stringify(infos),
         credentials: "include",
       });
-
       if (!response.ok) {
         const errorData = await response.json();
         const firstKey = Object.keys(errorData)[0];
@@ -126,7 +136,10 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
       </div>
       <div className="display">
         <div className="mainScreen">
-          <select className="seletor-grupo" onChange={handleChange}>
+          <select
+            className="seletor-grupo"
+            onChange={handleChangeGroupDropdown}
+          >
             <option value="">Selecione um grupo</option>
             <option value="Novo grupo">Novo grupo</option>
             {grupos.map((grupo) => (
@@ -145,7 +158,7 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
                   <input
                     name="nome"
                     value={selectedGrupo?.nome || newGrupo.nome}
-                    onChange={handleInputChange}
+                    onChange={handleInputChangeWhenEditingGroup}
                     required
                   />
                 </div>
@@ -154,24 +167,20 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
                   <input
                     name="campanha"
                     value={selectedGrupo?.campanha || newGrupo.campanha}
-                    onChange={handleInputChange}
+                    onChange={handleInputChangeWhenEditingGroup}
                     required
                   />
                 </div>
-                <div className="campo">
+                <div className="lista">
                   <label>Jogadores</label>
-                  <select
-                    className="seletor-personagem"
-                    onChange={handleChangePersonagens}
-                  >
-                    <option value="">Selecione um personagem</option>
-                    {personagens.map((personagem) => (
-                      <option key={personagem.name} value={personagem.name}>
-                        {personagem.name}
-                      </option>
-                    ))}
-                  </select>
+                  <ul className="list-none">
+                    {" "}
+                    {personagens.map((personagem, index) =>
+                      renderPersonagens(personagem, index)
+                    )}
+                  </ul>
                 </div>
+
                 <div className="footer-ficha">
                   <button className="botao-salvar" type="submit">
                     Salvar
@@ -190,11 +199,18 @@ export default function GerenciarGrupo({ grupos }: GruposProps) {
                   <label>Campanha</label>
                   <div>{selectedGrupo.campanha}</div>
                 </div>
-                <div className="campo">
-                  <label>Jogadores</label>
-                  {selectedGrupo.fichasAtuais.map((ficha) => (
-                    <div key={ficha}>{ficha}</div>
-                  ))}
+                <div className="lista-jogadores-do-grupo">
+                  {selectedGrupo.fichasAtuais.map((ficha) => {
+                    const personagem = personagens.find((p) => p.id === ficha);
+
+                    return (
+                      <div key={ficha}>
+                        {personagem
+                          ? personagem.name
+                          : "Personagem não encontrado"}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <div className="footer-ficha">
