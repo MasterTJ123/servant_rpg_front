@@ -8,7 +8,9 @@ const myFont = localFont({
 export const metadata = {
     title: "Servant RPG",
     description: "Servant RPG",
-    charSet: "UTF-8",
+    other: {
+        charSet: 'UTF-8' ,
+    }
 };
 
 export default function RootLayout({children}) {
