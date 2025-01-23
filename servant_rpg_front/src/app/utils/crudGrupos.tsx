@@ -1,11 +1,10 @@
 //Feito pelo chat GPT, com certeza contém erros. Dei uma olhada por cima, e não achei nada muito descarado
 "use client";
 
-export interface Group {
-  id: number;
-  name: string;
-  description: string;
-  members: number;
+export interface Grupo {
+  nome: string;
+  campanha: string;
+  fichasAtuais: number[]; // Array com os nomes dos jogadores
 }
 
 function csrfToken() {
@@ -69,16 +68,16 @@ export async function fetchSingleGroup(id: number) {
   }
 }
 
-export async function sendGroup(formData: FormData) {
+export async function sendGroup(grupo: Grupo) {
   try {
-    const formValues = Object.fromEntries(formData.entries());
+    //const formValues = Object.fromEntries(formData.entries());
 
     const dataToSend = {
-      name: formValues.name,
-      description: formValues.description,
+      name: grupo.nome,
+      campaign: grupo.campanha,
     };
 
-    const response = await fetch("http://localhost:8000/en/api/groups/", {
+    const responseInfos = await fetch("http://localhost:8000/en/api/groups/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -88,15 +87,43 @@ export async function sendGroup(formData: FormData) {
       body: JSON.stringify(dataToSend),
     });
 
-    if (!response.ok) {
+    if (!responseInfos.ok) {
       throw new Error(
-        `Failed to send data: ${response.status} ${response.statusText}`
+        `Failed to send data: ${responseInfos.status} ${responseInfos.statusText}`
       );
     }
 
-    const result = await response.json();
-    console.log("Group created:", result);
-    return result;
+    const resultGroup = await responseInfos.json();
+    console.log("Group created:", resultGroup);
+    const idsToSendDict = grupo.fichasAtuais.map((combatantId) => ({
+      combatant: combatantId,
+      group: resultGroup.id,
+      group_entry: "2025-12-19",
+      group_exit: "2099-12-19",
+    }));
+
+    const responses = await Promise.all(
+      idsToSendDict.map((data) =>
+        fetch("http://localhost:8000/en/api/combatants-groups/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken(),
+          },
+          credentials: "include",
+          body: JSON.stringify(data),
+        })
+      )
+    );
+
+    // Handle responses (check for errors or process success)
+    const responseResults = await Promise.all(
+      responses.map((res) => res.json())
+    );
+
+    console.log("All responses received:", responseResults);
+
+    return resultGroup;
   } catch (error) {
     console.error("Error sending group:", error);
     throw error;
@@ -109,6 +136,7 @@ export async function deleteGroup(id: number): Promise<void> {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken(),
       },
       credentials: "include",
     });

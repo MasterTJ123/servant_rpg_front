@@ -32,18 +32,11 @@ export default function GerenciarFicha({
 
   const router = useRouter();
 
-  // const handleEditSheet = () => {
-  //   router.push(`/gerenciar-ficha/editar-ficha/${selectedPersonagem.id}`);
-
-  // };
-
   const handleDeleteCharacter = async (id: number) => {
     console.log("Deletando:", selectedPersonagem);
     deletePersonagem(id);
     personagens.splice(positionSelected);
     setSelectedPersonagem(null);
-    //Esta deletando corretamente
-    //TODO preciso dar um jeito de tirar o personagem da listagem atual
   };
 
   return (
