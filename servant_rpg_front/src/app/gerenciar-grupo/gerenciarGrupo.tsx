@@ -3,17 +3,8 @@ import { useEffect, useState } from "react";
 import "./gerenciarGrupo.css";
 import BotaoRedondo from "../components/botaoRedondo/botaoRedondo"; // Ajuste o caminho conforme necessário
 import { fetchPersonagens, Personagem } from "../utils/crudPersonagens";
+import { sendGroup, Grupo } from "../utils/crudGrupos";
 
-interface Grupo {
-  nome: string;
-  campanha: string;
-  fichasAtuais: number[]; // Array com os nomes dos jogadores
-}
-
-interface GrupoStrings {
-  nome: string;
-  campanha: string;
-}
 interface GruposProps {
   grupos: Grupo[];
   personagens: Personagem[];
@@ -22,19 +13,23 @@ interface GruposProps {
 export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
   const [selectedGrupo, setSelectedGrupo] = useState<Grupo | null>(null); //controla qual grupo foi selecionado no dropdown
   const [isEditing, setIsEditing] = useState(false); //controla se o grupo esta sendo editado
-  const [newGrupo, setNewGrupo] = useState<GrupoStrings>({
+  const [newGrupo, setNewGrupo] = useState<Grupo>({
     nome: "",
     campanha: "",
-    //fichasAtuais: [],
+    fichasAtuais: [],
   }); //Cria um estado para salvar o novo grupo
   const [erro, setErro] = useState<string>("");
 
   //
   //preciso de um estado para controlar qual personagem esta selecionado
   //controla se a checkbox esta selecionada ou nao
-  const [selectedPersonagens, setSelectedPersonagens] = useState(
-    new Array(personagens.length).fill(false)
-  );
+  const [selectedPersonagens, setSelectedPersonagens] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    if (personagens.length > 0) {
+      setSelectedPersonagens(new Array(personagens.length).fill(false));
+    }
+  }, [personagens]);
 
   //tabela com checkbox
   const renderPersonagens = (personagem: Personagem, index: number) => {
@@ -72,7 +67,7 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
     if (selectedValue === "Novo grupo") {
       setSelectedGrupo(null);
       setIsEditing(true);
-      setNewGrupo({ nome: "", campanha: "" });
+      setNewGrupo({ nome: "", campanha: "", fichasAtuais: [] });
     } else {
       const grupo = grupos.find((grupo) => grupo.nome === selectedValue);
       setSelectedGrupo(grupo || null);
@@ -84,11 +79,17 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
-    const updateGrupo = (grupo: Grupo) => ({ ...grupo, [name]: value });
 
-    // selectedGrupo
-    //   ? setSelectedGrupo(updateGrupo(selectedGrupo))
-    //   : setNewGrupo(updateGrupo(newGrupo));
+    if (isEditing) {
+      // If editing, update the state consistently
+      if (selectedGrupo) {
+        setSelectedGrupo((prevGrupo) =>
+          prevGrupo ? { ...prevGrupo, [name]: value } : null
+        );
+      } else {
+        setNewGrupo((prevGrupo) => ({ ...prevGrupo, [name]: value }));
+      }
+    }
   };
 
   const saveGrupo = async (e: React.FormEvent) => {
@@ -99,26 +100,14 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
       (_, index) => selectedPersonagens[index]
     );
     const selecionadosId = selecionados.map((ficha) => ficha.id);
-    //grupo.fichasAtuais = selecionadosId;
-    console.log(infos);
+    infos.fichasAtuais = selecionadosId;
+    console.log(
+      "Na interface, esses sao os selecionados:",
+      selectedPersonagens
+    );
 
     try {
-      const method = "POST";
-      const response = await fetch("http://localhost:8000/en/api/groups/", {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(infos),
-        credentials: "include",
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        const firstKey = Object.keys(errorData)[0];
-        setErro(errorData[firstKey]?.[0]);
-        return;
-      }
-
-      const data = await response.json();
-      console.log(`${selectedGrupo ? "Grupo editado" : "Grupo criado"}:`, data);
+      sendGroup(infos);
     } catch (error) {
       console.error(error);
       setErro("Erro inesperado! Tente novamente mais tarde!");
@@ -157,7 +146,9 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
                   <label>Nome</label>
                   <input
                     name="nome"
-                    value={selectedGrupo?.nome || newGrupo.nome}
+                    value={
+                      isEditing ? selectedGrupo?.nome || newGrupo.nome : ""
+                    }
                     onChange={handleInputChangeWhenEditingGroup}
                     required
                   />
@@ -166,7 +157,11 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
                   <label>Campanha</label>
                   <input
                     name="campanha"
-                    value={selectedGrupo?.campanha || newGrupo.campanha}
+                    value={
+                      isEditing
+                        ? selectedGrupo?.campanha || newGrupo.campanha
+                        : ""
+                    }
                     onChange={handleInputChangeWhenEditingGroup}
                     required
                   />
