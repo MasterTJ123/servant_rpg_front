@@ -8,6 +8,7 @@ import {
   Personagem,
 } from "../../../utils/crudPersonagens";
 import "./editarficha.css";
+import { useRouter } from "next/navigation";
 
 interface idFicha {
   id: number;
@@ -30,6 +31,8 @@ export default function EditarFicha({ params }: { params: Promise<idFicha> }) {
     caracteristicas: "",
     jogador: false,
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     async function fecthPersonagem() {
@@ -60,6 +63,7 @@ export default function EditarFicha({ params }: { params: Promise<idFicha> }) {
 
       const enviado = await editPersonagem(formData, idFicha); // Send the form values to backend
       //console.log(enviado);
+      router.push("/gerenciar-ficha");
     } catch (error) {
       console.log("Error sending data:", error);
     }

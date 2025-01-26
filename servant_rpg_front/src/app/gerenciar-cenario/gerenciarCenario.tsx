@@ -1,37 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./gerenciarCenario.css";
 import BotaoRedondo from "../components/botaoRedondo/botaoRedondo"; // Ajuste o caminho conforme necessário
+import {
+  Cenario,
+  deleteCenario,
+  editCenario,
+  fetchCenarios,
+  sendCenario,
+} from "../utils/crudCenarios";
 
-interface Cenario {
-  nome: string;
-  campanha: string;
-  inimigosAtuais: string[]; // Array with character names
-}
-
-interface CenariosProps {
-  cenarios: Cenario[];
-}
-
-export default function GerenciarCenario({ cenarios }: CenariosProps) {
+export default function GerenciarCenario() {
   const [selectedCenario, setSelectedCenario] = useState<Cenario | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newCenario, setNewCenario] = useState<Cenario>({
-    nome: "",
-    campanha: "",
-    inimigosAtuais: [],
+    id: -1,
+    name: "",
+    families: "",
+    characteristics: "",
   });
+  const [cenarios, setCenarios] = useState([]);
+  const [error, setError] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const loadCenarios = async () => {
+      try {
+        const data = await fetchCenarios();
+        setCenarios(data); // Update state with fetched data
+      } catch (error) {
+        console.log(error);
+        setError("Error fetching personagens");
+        setCenarios([]); // Return empty list in case of error
+      }
+    };
+
+    loadCenarios();
+  }, [refreshKey]); // Empty dependency array ensures this runs once on component mount
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
     if (selectedValue === "Novo cenário") {
       setSelectedCenario(null);
       setIsEditing(true);
-      setNewCenario({ nome: "", campanha: "", inimigosAtuais: [] });
+      setNewCenario({ id: -1, name: "", families: "", characteristics: "" });
     } else {
       const cenario = cenarios.find(
-        (cenario) => cenario.nome === selectedValue
+        (cenario) => cenario.name === selectedValue
       );
       setSelectedCenario(cenario || null);
       setIsEditing(false);
@@ -49,33 +65,35 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
     }
   };
 
-  const handleInimigosChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    const { value } = event.target;
-    const inimigosArray = value.split(",").map((item) => item.trim());
-    if (selectedCenario) {
-      setSelectedCenario({
-        ...selectedCenario,
-        inimigosAtuais: inimigosArray,
-      });
-    } else {
-      setNewCenario({
-        ...newCenario,
-        inimigosAtuais: inimigosArray,
-      });
+  const saveCenario = async () => {
+    try {
+      if (selectedCenario) {
+        // Update the existing scenario
+        await editCenario(selectedCenario, selectedCenario.id);
+
+        console.log("Updated scenario:", selectedCenario);
+      } else {
+        // Create a new scenario
+        await sendCenario(newCenario);
+        console.log("Created new scenario:", newCenario);
+      }
+      setIsEditing(false); // Exit editing mode after saving
+      setRefreshKey((prevKey) => prevKey + 1);
+    } catch (error) {
+      console.error("Failed to save scenario:", error);
     }
   };
 
-  const saveCenario = () => {
-    if (selectedCenario) {
-      // Logic to update the existing scenario
-      console.log("Updated scenario:", selectedCenario);
-    } else {
-      // Logic to create a new scenario
-      console.log("Created new scenario:", newCenario);
+  const deletarCenario = async () => {
+    try {
+      await deleteCenario(selectedCenario.id);
+      console.log("Deletado scenario:", selectedCenario);
+    } catch (error) {
+      console.log("Erro ao deletar cenario:", error);
     }
-    setIsEditing(false);
+    setIsEditing(false); // Exit editing mode after saving
+    setRefreshKey((prevKey) => prevKey + 1);
+    setSelectedCenario(null);
   };
 
   const startEditing = () => setIsEditing(true);
@@ -93,8 +111,8 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
             <option value="">Selecione um cenário</option>
             <option value="Novo cenário">Novo cenário</option>
             {cenarios.map((cenario) => (
-              <option key={cenario.nome} value={cenario.nome}>
-                {cenario.nome}
+              <option key={cenario.id} value={cenario.name}>
+                {cenario.name}
               </option>
             ))}
           </select>
@@ -105,29 +123,29 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
               <div className="campo">
                 <label>Nome</label>
                 <input
-                  name="nome"
-                  value={selectedCenario?.nome || newCenario.nome}
+                  name="name"
+                  value={selectedCenario?.name || newCenario.name}
                   onChange={handleInputChange}
                 />
               </div>
               <div className="campo">
-                <label>Campanha</label>
-                <input
-                  name="campanha"
-                  value={selectedCenario?.campanha || newCenario.campanha}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="campo">
-                <label>Jogadores</label>
+                <label>Familias</label>
                 <textarea
-                  name="inimigosAtuais"
+                  name="families"
+                  value={selectedCenario?.families || newCenario.families}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="campo">
+                <label>Caracteristicas</label>
+                <textarea
+                  name="characteristics"
                   value={
                     selectedCenario
-                      ? selectedCenario.inimigosAtuais.join(", ")
-                      : newCenario.inimigosAtuais.join(", ")
+                      ? selectedCenario.characteristics
+                      : newCenario.characteristics
                   }
-                  onChange={handleInimigosChange}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="footer-ficha">
@@ -145,17 +163,15 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
               <div className="linha-campos">
                 <div className="campo">
                   <label>Nome</label>
-                  <div>{selectedCenario.nome}</div>
+                  <div>{selectedCenario.name}</div>
                 </div>
                 <div className="campo">
-                  <label>Campanha</label>
-                  <div>{selectedCenario.campanha}</div>
+                  <label>Familia</label>
+                  <div>{selectedCenario.families}</div>
                 </div>
                 <div>
-                  <label>Inimigos</label>
-                  {selectedCenario.inimigosAtuais.map((ficha) => (
-                    <div key={ficha}>{ficha}</div>
-                  ))}
+                  <label>Caracteristicas</label>
+                  <div>{selectedCenario.characteristics}</div>
                 </div>
               </div>
               <div className="footer-ficha">
@@ -169,9 +185,7 @@ export default function GerenciarCenario({ cenarios }: CenariosProps) {
                 <button
                   className="botao-deletar"
                   type="button"
-                  onClick={() =>
-                    console.log("Deletado cenário:", selectedCenario.nome)
-                  }
+                  onClick={() => deletarCenario()}
                 >
                   Deletar
                 </button>

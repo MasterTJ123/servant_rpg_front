@@ -14,8 +14,9 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
   const [selectedGrupo, setSelectedGrupo] = useState<Grupo | null>(null); //controla qual grupo foi selecionado no dropdown
   const [isEditing, setIsEditing] = useState(false); //controla se o grupo esta sendo editado
   const [newGrupo, setNewGrupo] = useState<Grupo>({
-    nome: "",
-    campanha: "",
+    id: -1,
+    name: "",
+    campaign: "",
     fichasAtuais: [],
   }); //Cria um estado para salvar o novo grupo
   const [erro, setErro] = useState<string>("");
@@ -67,9 +68,9 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
     if (selectedValue === "Novo grupo") {
       setSelectedGrupo(null);
       setIsEditing(true);
-      setNewGrupo({ nome: "", campanha: "", fichasAtuais: [] });
+      setNewGrupo({ id: -1, name: "", campaign: "", fichasAtuais: [] });
     } else {
-      const grupo = grupos.find((grupo) => grupo.nome === selectedValue);
+      const grupo = grupos.find((grupo) => grupo.name === selectedValue);
       setSelectedGrupo(grupo || null);
       setIsEditing(false);
     }
@@ -101,10 +102,6 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
     );
     const selecionadosId = selecionados.map((ficha) => ficha.id);
     infos.fichasAtuais = selecionadosId;
-    console.log(
-      "Na interface, esses sao os selecionados:",
-      selectedPersonagens
-    );
 
     try {
       sendGroup(infos);
@@ -132,8 +129,8 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
             <option value="">Selecione um grupo</option>
             <option value="Novo grupo">Novo grupo</option>
             {grupos.map((grupo) => (
-              <option key={grupo.nome} value={grupo.nome}>
-                {grupo.nome}
+              <option key={grupo.id} value={grupo.name}>
+                {grupo.name}
               </option>
             ))}
           </select>
@@ -147,7 +144,7 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
                   <input
                     name="nome"
                     value={
-                      isEditing ? selectedGrupo?.nome || newGrupo.nome : ""
+                      isEditing ? selectedGrupo?.name || newGrupo.name : ""
                     }
                     onChange={handleInputChangeWhenEditingGroup}
                     required
@@ -159,7 +156,7 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
                     name="campanha"
                     value={
                       isEditing
-                        ? selectedGrupo?.campanha || newGrupo.campanha
+                        ? selectedGrupo?.campaign || newGrupo.campaign
                         : ""
                     }
                     onChange={handleInputChangeWhenEditingGroup}
@@ -188,11 +185,11 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
               <div className="linha-campos">
                 <div className="campo">
                   <label>Nome</label>
-                  <div>{selectedGrupo.nome}</div>
+                  <div>{selectedGrupo.name}</div>
                 </div>
                 <div className="campo">
                   <label>Campanha</label>
-                  <div>{selectedGrupo.campanha}</div>
+                  <div>{selectedGrupo.campaign}</div>
                 </div>
                 <div className="lista-jogadores-do-grupo">
                   {selectedGrupo.fichasAtuais.map((ficha) => {
@@ -220,7 +217,7 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
                   className="botao-deletar"
                   type="button"
                   onClick={() =>
-                    console.log("Deletado grupo:", selectedGrupo.nome)
+                    console.log("Deletado grupo:", selectedGrupo.name)
                   }
                 >
                   Deletar

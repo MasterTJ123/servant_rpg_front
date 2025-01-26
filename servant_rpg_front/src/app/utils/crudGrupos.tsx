@@ -2,8 +2,9 @@
 "use client";
 
 export interface Grupo {
-  nome: string;
-  campanha: string;
+  id: number;
+  name: string;
+  campaign: string;
   fichasAtuais: number[]; // Array com os nomes dos jogadores
 }
 
@@ -73,8 +74,8 @@ export async function sendGroup(grupo: Grupo) {
     //const formValues = Object.fromEntries(formData.entries());
 
     const dataToSend = {
-      name: grupo.nome,
-      campaign: grupo.campanha,
+      name: grupo.name,
+      campaign: grupo.campaign,
     };
 
     const responseInfos = await fetch("http://localhost:8000/en/api/groups/", {
