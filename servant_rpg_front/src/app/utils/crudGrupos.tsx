@@ -94,8 +94,9 @@ export async function fetchGroups(): Promise<Grupo[]> {
   }
 }
 
-export async function fetchSingleGroup(id: number) {
+export async function fetchSingleGroup(id: number): Promise<Grupo> {
   try {
+    // Fetch the group details
     const response = await fetch(`http://localhost:8000/en/api/groups/${id}/`, {
       method: "GET",
       headers: {
@@ -108,12 +109,56 @@ export async function fetchSingleGroup(id: number) {
     if (!response.ok) {
       console.log(response);
       throw new Error(
-        `Failed to fetch: ${response.status} ${response.statusText}`
+        `Failed to fetch group: ${response.status} ${response.statusText}`
       );
     }
 
     const group = await response.json();
-    return group;
+
+    // Fetch the combatants for the group
+    try {
+      const combatantsResponse = await fetch(
+        `http://localhost:8000/en/api/groups/${id}/combatants/`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken(),
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!combatantsResponse.ok) {
+        console.warn(
+          `Failed to fetch combatants for group ${id}: ${combatantsResponse.status} ${combatantsResponse.statusText}`
+        );
+        return {
+          id: group.id,
+          name: group.name,
+          campaign: group.campaign,
+          fichasAtuais: [], // Return empty array if combatants request fails
+        };
+      }
+
+      const combatantsData = await combatantsResponse.json();
+
+      // Construct and return the Grupo object
+      return {
+        id: group.id,
+        name: group.name,
+        campaign: group.campaign,
+        fichasAtuais: combatantsData.combatant_ids,
+      };
+    } catch (error) {
+      console.error(`Error fetching combatants for group ${id}:`, error);
+      return {
+        id: group.id,
+        name: group.name,
+        campaign: group.campaign,
+        fichasAtuais: [], // Handle error gracefully
+      };
+    }
   } catch (error) {
     console.error("Error fetching group:", error);
     throw error;
