@@ -71,7 +71,9 @@ export default function GerenciarGrupo({ grupos, personagens }: GruposProps) {
       setNewGrupo({ id: -1, name: "", campaign: "", fichasAtuais: [] });
     } else {
       const grupo = grupos.find((grupo) => grupo.name === selectedValue);
+
       setSelectedGrupo(grupo || null);
+      console.log(grupo);
       setIsEditing(false);
     }
   };
