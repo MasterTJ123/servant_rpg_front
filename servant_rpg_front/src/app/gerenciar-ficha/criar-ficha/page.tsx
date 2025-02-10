@@ -3,6 +3,7 @@ import { FormEvent, JSX, useEffect, useState } from "react";
 import "./criarficha.css";
 import React from "react";
 import { sendPersonagem } from "../../utils/crudPersonagens";
+import { useRouter } from "next/navigation";
 
 export default function PaginaEditarPersonagem(): JSX.Element {
   const [formData, setFormData] = useState({
@@ -21,6 +22,8 @@ export default function PaginaEditarPersonagem(): JSX.Element {
     profD: "",
     jogador: false,
   });
+
+  const router = useRouter();
 
   // Effect hook to handle side effects or async tasks after form data is set
   useEffect(() => {
@@ -41,6 +44,7 @@ export default function PaginaEditarPersonagem(): JSX.Element {
 
       const enviado = await sendPersonagem(formData); // Send the form values to backend
       console.log(enviado);
+      router.push("/gerenciar-ficha");
     } catch (error) {
       console.log("Error sending data:", error);
     }

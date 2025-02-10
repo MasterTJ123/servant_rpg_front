@@ -25,6 +25,7 @@ export default function Grupo() {
         const characters = await fetchPersonagens();
         setGrupos(groups); // Update state with fetched data
         setPersonagens(characters);
+        console.log(groups);
       } catch (error) {
         console.log(error);
         setError("Error fetching personagens");
@@ -45,3 +46,5 @@ export default function Grupo() {
     </div>
   );
 }
+
+//TODO consertar o bug que quando volta pra cá de uma outra página o botão fica por cima do dropdown

@@ -2,8 +2,9 @@
 "use client";
 
 export interface Grupo {
-  nome: string;
-  campanha: string;
+  id: number;
+  name: string;
+  campaign: string;
   fichasAtuais: number[]; // Array com os nomes dos jogadores
 }
 
@@ -16,7 +17,7 @@ function csrfToken() {
   return csrfToken;
 }
 
-export async function fetchGroups() {
+export async function fetchGroups(): Promise<Grupo[]> {
   try {
     const response = await fetch("http://localhost:8000/en/api/groups/", {
       method: "GET",
@@ -35,15 +36,67 @@ export async function fetchGroups() {
     }
 
     const groups = await response.json();
-    return groups;
+
+    // Fetch combatants for each group and build the structure
+    const groupsWithCombatants: Grupo[] = await Promise.all(
+      groups.map(async (group: any) => {
+        try {
+          const combatantsResponse = await fetch(
+            `http://localhost:8000/en/api/groups/${group.id}/combatants/`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken(),
+              },
+              credentials: "include",
+            }
+          );
+
+          if (!combatantsResponse.ok) {
+            console.warn(
+              `Failed to fetch combatants for group ${group.id}: ${combatantsResponse.status} ${combatantsResponse.statusText}`
+            );
+            return {
+              id: group.id,
+              name: group.name,
+              campaign: group.campaign,
+              fichasAtuais: [],
+            }; // Return the group without combatants in case of an error
+          }
+
+          const combatantsData = await combatantsResponse.json();
+          return {
+            id: group.id,
+            name: group.name,
+            campaign: group.campaign,
+            fichasAtuais: combatantsData.combatant_ids,
+          };
+        } catch (error) {
+          console.error(
+            `Error fetching combatants for group ${group.id}:`,
+            error
+          );
+          return {
+            id: group.id,
+            name: group.name,
+            campaign: group.campaign,
+            fichasAtuais: [],
+          }; // Handle error and continue
+        }
+      })
+    );
+
+    return groupsWithCombatants;
   } catch (error) {
     console.error("Error fetching groups:", error);
     throw error;
   }
 }
 
-export async function fetchSingleGroup(id: number) {
+export async function fetchSingleGroup(id: number): Promise<Grupo> {
   try {
+    // Fetch the group details
     const response = await fetch(`http://localhost:8000/en/api/groups/${id}/`, {
       method: "GET",
       headers: {
@@ -56,12 +109,56 @@ export async function fetchSingleGroup(id: number) {
     if (!response.ok) {
       console.log(response);
       throw new Error(
-        `Failed to fetch: ${response.status} ${response.statusText}`
+        `Failed to fetch group: ${response.status} ${response.statusText}`
       );
     }
 
     const group = await response.json();
-    return group;
+
+    // Fetch the combatants for the group
+    try {
+      const combatantsResponse = await fetch(
+        `http://localhost:8000/en/api/groups/${id}/combatants/`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken(),
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!combatantsResponse.ok) {
+        console.warn(
+          `Failed to fetch combatants for group ${id}: ${combatantsResponse.status} ${combatantsResponse.statusText}`
+        );
+        return {
+          id: group.id,
+          name: group.name,
+          campaign: group.campaign,
+          fichasAtuais: [], // Return empty array if combatants request fails
+        };
+      }
+
+      const combatantsData = await combatantsResponse.json();
+
+      // Construct and return the Grupo object
+      return {
+        id: group.id,
+        name: group.name,
+        campaign: group.campaign,
+        fichasAtuais: combatantsData.combatant_ids,
+      };
+    } catch (error) {
+      console.error(`Error fetching combatants for group ${id}:`, error);
+      return {
+        id: group.id,
+        name: group.name,
+        campaign: group.campaign,
+        fichasAtuais: [], // Handle error gracefully
+      };
+    }
   } catch (error) {
     console.error("Error fetching group:", error);
     throw error;
@@ -73,8 +170,8 @@ export async function sendGroup(grupo: Grupo) {
     //const formValues = Object.fromEntries(formData.entries());
 
     const dataToSend = {
-      name: grupo.nome,
-      campaign: grupo.campanha,
+      name: grupo.name,
+      campaign: grupo.campaign,
     };
 
     const responseInfos = await fetch("http://localhost:8000/en/api/groups/", {
@@ -185,3 +282,37 @@ export async function editGroup(formData: FormData, id: number) {
     throw error;
   }
 }
+
+// //Fazendo a disgraca da selecao no frontend, pq neh, fodasse
+// export async function aMerdaDosCombatentesDoGrupo(id: number) {
+//   try {
+//     const response = await fetch(
+//       `http://localhost:8000/en/api/groups/${id}/combatants/`,
+//       {
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json",
+//           "X-CSRFToken": csrfToken(),
+//         },
+//         credentials: "include",
+//       }
+//     );
+
+//     if (!response.ok) {
+//       console.log(response);
+//       throw new Error(
+//         `Failed to fetch: ${response.status} ${response.statusText}`
+//       );
+//     }
+
+//     const group = await response.json();
+//     console.log(
+//       "A merda do que ta sendo retornado pela rota desgracada:",
+//       group
+//     );
+//     return group;
+//   } catch (error) {
+//     console.error("Error fetching group:", error);
+//     throw error;
+//   }
+// }

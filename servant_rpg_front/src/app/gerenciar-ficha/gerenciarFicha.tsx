@@ -45,7 +45,7 @@ export default function GerenciarFicha({
         <select className="seletor-personagem" onChange={handleChange}>
           <option value="">Selecione um personagem</option>
           {personagens.map((personagem) => (
-            <option key={personagem.name} value={personagem.name}>
+            <option key={personagem.id} value={personagem.name}>
               {personagem.name}
             </option>
           ))}
