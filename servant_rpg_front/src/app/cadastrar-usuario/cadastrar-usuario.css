@@ -1,30 +1,53 @@
+.pagina-contatiner {
+    display: flex;
+    overflow-y: auto;
+}
+
+html, body {
+    height: 100%; /* Garantir que o body ocupe 100% da altura */
+    overflow-y: auto; /* Permite a rolagem */
+    margin: 0; /* Remover margens padrão */
+}
+
 .background-img {
-    position: fixed;
+    position: fixed; /* Mantém a imagem fixa no fundo */
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
+    height: 100%; /* Cobrir toda a tela */
     background-image: url('../../../public/images/login-background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    z-index: -1;
+    z-index: -1; /* Manter a imagem atrás de todos os outros conteúdos */
 }
 
 .menu {
-    position: fixed;
+    position: fixed; /* Fixa o menu no fundo */
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 25%;
+    height: 25vh; /* Ajuste conforme necessário */
     background-color: #441C1C;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
+    z-index: 1; /* Garantir que o menu fique acima da imagem */
 }
 
-input {
-    margin: 10px 5px;
+.content {
+    flex-grow: 1; /* Permite que o conteúdo cresça e ocupe o espaço disponível */
+    padding-bottom: 25vh; /* Adiciona um espaço para o menu fixo */
+    overflow-y: auto; /* Permite a rolagem vertical */
+    min-height: 100vh; /* Garante que a div tenha altura mínima */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 5px;
 }
 
 .cadastro-div {
@@ -33,12 +56,6 @@ input {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-}
-
-.erro {
-    color: #FF0000FF;
-    font-size: 20px;
-    text-shadow: 0 0 1px #FFFFFF;
 }
 
 .cadastro {
@@ -51,8 +68,23 @@ input {
     margin: 0;
 }
 
-.cadastro-usuario {
-    font-size: 30px;
-    color: brown;
+.input-div {
+    display: flex;
+    flex-direction: column;
+    margin: 0 15px;
 }
 
+.inputs-superiores {
+    display: flex;
+    justify-content: space-around;
+}
+
+.inputs-inferiores {
+    display: flex;
+    justify-content: space-around;
+}
+
+.label {
+    color: #FFFFFF;
+    font-weight: bold;
+}
