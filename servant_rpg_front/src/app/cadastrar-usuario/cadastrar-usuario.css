@@ -1,90 +1,191 @@
 .pagina-contatiner {
-    display: flex;
-    overflow-y: auto;
+  display: flex;
+  overflow-y: auto;
 }
 
-html, body {
-    height: 100%; /* Garantir que o body ocupe 100% da altura */
-    overflow-y: auto; /* Permite a rolagem */
-    margin: 0; /* Remover margens padrão */
+html,
+body {
+  height: 100%; /* Garantir que o body ocupe 100% da altura */
+  overflow-y: auto; /* Permite a rolagem */
+  margin: 0; /* Remover margens padrão */
 }
 
 .background-img {
-    position: fixed; /* Mantém a imagem fixa no fundo */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; /* Cobrir toda a tela */
-    background-image: url('../../../public/images/login-background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -1; /* Manter a imagem atrás de todos os outros conteúdos */
+  position: fixed; /* Mantém a imagem fixa no fundo */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* Cobrir toda a tela */
+  background-image: url("../../../public/images/login-background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1; /* Manter a imagem atrás de todos os outros conteúdos */
 }
 
 .menu {
-    position: fixed; /* Fixa o menu no fundo */
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 25vh; /* Ajuste conforme necessário */
-    background-color: #441C1C;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 1; /* Garantir que o menu fique acima da imagem */
+  position: fixed; /* Fixa o menu no fundo */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25vh; /* Ajuste conforme necessário */
+  background-color: #441c1c;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1; /* Garantir que o menu fique acima da imagem */
 }
 
 .content {
-    flex-grow: 1; /* Permite que o conteúdo cresça e ocupe o espaço disponível */
-    padding-bottom: 25vh; /* Adiciona um espaço para o menu fixo */
-    overflow-y: auto; /* Permite a rolagem vertical */
-    min-height: 100vh; /* Garante que a div tenha altura mínima */
+  flex-grow: 1; /* Permite que o conteúdo cresça e ocupe o espaço disponível */
+  padding-bottom: 25vh; /* Adiciona um espaço para o menu fixo */
+  overflow-y: auto; /* Permite a rolagem vertical */
+  min-height: 100vh; /* Garante que a div tenha altura mínima */
 }
 
 form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 5px;
 }
 
 .cadastro-div {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .cadastro {
-    font-size: 1.8rem;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 0 #000000,
-    -1px -1px 0 #000000,
-    1px -1px 0 #000000,
+  font-size: 1.8rem;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000,
     -1px 1px 0 #000000;
-    margin: 0;
+  margin: 0;
 }
 
 .input-div {
-    display: flex;
-    flex-direction: column;
-    margin: 0 15px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 15px;
 }
 
 .inputs-superiores {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 .inputs-inferiores {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 .label {
-    color: #FFFFFF;
-    font-weight: bold;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.botao-voltar {
+  display: block;
+}
+
+.botao-container-mobile {
+  display: none;
+}
+
+@media (max-width: 822px) {
+  .background-img {
+    background-position: 85%;
+  }
+
+  .menu {
+    /* height: 30vh; */
+    flex-direction: column;
+  }
+
+  .botao-voltar {
+    display: none;
+  }
+
+  .botao-container-mobile {
+    display: block;
+  }
+
+  .mobile-button-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+}
+
+@media (max-width: 593px) {
+  .background-img {
+    background-position: 85%;
+  }
+
+  .menu {
+    height: 46vh;
+    flex-direction: column;
+  }
+
+  .cadastro {
+    font-size: 1.5rem;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .inputs-superiores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .inputs-inferiores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .input-div {
+    margin-bottom: 10px;
+  }
+
+  label {
+    font-size: 0.8rem;
+  }
+
+  input {
+    width: 260px;
+    height: 22px;
+  }
+
+  .botao-voltar {
+    display: none;
+  }
+
+  .botao-container-mobile {
+    display: block;
+  }
+
+  .mobile-button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    scale: 0.7;
+  }
+}
+
+@media (max-width: 320px) {
+  /* .input-div {
+    width: 200px;
+  } */
 }
